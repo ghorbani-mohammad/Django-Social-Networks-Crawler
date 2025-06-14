@@ -10,7 +10,7 @@ from . import models
 
 
 @admin.register(models.Network)
-class NetworkAdmin(ReadOnlyAdminDateFieldsMIXIN, admin.ModelAdmin):
+class NetworkAdmin(ReadOnlyAdminDateFieldsMIXIN):
     list_display = (
         "pk",
         "name",
