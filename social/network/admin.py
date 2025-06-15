@@ -22,7 +22,7 @@ class NetworkAdmin(ReadOnlyAdminDateFieldsMIXIN):
 
 
 @admin.register(models.Channel)
-class ChannelAdmin(ReadOnlyAdminDateFieldsMIXIN, admin.ModelAdmin):
+class ChannelAdmin(ReadOnlyAdminDateFieldsMIXIN):
     list_display = (
         "pk",
         "name",
