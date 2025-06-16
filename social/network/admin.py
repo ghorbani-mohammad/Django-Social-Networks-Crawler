@@ -55,7 +55,7 @@ class ChannelAdmin(ReadOnlyAdminDateFieldsMIXIN):
 
 
 @admin.register(models.Post)
-class PostAdmin(ReadOnlyAdminDateFieldsMIXIN, admin.ModelAdmin):
+class PostAdmin(ReadOnlyAdminDateFieldsMIXIN):
     list_display = (
         "pk",
         "channel",
