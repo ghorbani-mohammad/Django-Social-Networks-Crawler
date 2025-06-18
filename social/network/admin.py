@@ -72,7 +72,7 @@ class PostAdmin(ReadOnlyAdminDateFieldsMIXIN):
 
 
 @admin.register(models.Keyword)
-class KeywordAdmin(ReadOnlyAdminDateFieldsMIXIN, admin.ModelAdmin):
+class KeywordAdmin(ReadOnlyAdminDateFieldsMIXIN):
     list_display = (
         "pk",
         "keyword",
