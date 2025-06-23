@@ -92,7 +92,7 @@ class KeywordAdmin(ReadOnlyAdminDateFieldsMIXIN):
 
 
 @admin.register(models.Backup)
-class BackupAdmin(ReadOnlyAdminDateFieldsMIXIN, admin.ModelAdmin):
+class BackupAdmin(ReadOnlyAdminDateFieldsMIXIN):
     list_display = (
         "pk",
         "link",
