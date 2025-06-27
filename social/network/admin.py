@@ -10,7 +10,7 @@ from . import models
 
 
 @admin.register(models.Network)
-class NetworkAdmin(ReadOnlyAdminDateFieldsMIXIN, admin.ModelAdmin):
+class NetworkAdmin(ReadOnlyAdminDateFieldsMIXIN):
     list_display = (
         "pk",
         "name",
@@ -22,7 +22,7 @@ class NetworkAdmin(ReadOnlyAdminDateFieldsMIXIN, admin.ModelAdmin):
 
 
 @admin.register(models.Channel)
-class ChannelAdmin(ReadOnlyAdminDateFieldsMIXIN, admin.ModelAdmin):
+class ChannelAdmin(ReadOnlyAdminDateFieldsMIXIN):
     list_display = (
         "pk",
         "name",
@@ -55,7 +55,7 @@ class ChannelAdmin(ReadOnlyAdminDateFieldsMIXIN, admin.ModelAdmin):
 
 
 @admin.register(models.Post)
-class PostAdmin(ReadOnlyAdminDateFieldsMIXIN, admin.ModelAdmin):
+class PostAdmin(ReadOnlyAdminDateFieldsMIXIN):
     list_display = (
         "pk",
         "channel",
@@ -72,7 +72,7 @@ class PostAdmin(ReadOnlyAdminDateFieldsMIXIN, admin.ModelAdmin):
 
 
 @admin.register(models.Keyword)
-class KeywordAdmin(ReadOnlyAdminDateFieldsMIXIN, admin.ModelAdmin):
+class KeywordAdmin(ReadOnlyAdminDateFieldsMIXIN):
     list_display = (
         "pk",
         "keyword",
@@ -92,7 +92,7 @@ class KeywordAdmin(ReadOnlyAdminDateFieldsMIXIN, admin.ModelAdmin):
 
 
 @admin.register(models.Backup)
-class BackupAdmin(ReadOnlyAdminDateFieldsMIXIN, admin.ModelAdmin):
+class BackupAdmin(ReadOnlyAdminDateFieldsMIXIN):
     list_display = (
         "pk",
         "link",
