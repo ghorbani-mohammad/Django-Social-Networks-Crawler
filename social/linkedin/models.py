@@ -1,7 +1,7 @@
 from django.db import models
 
-from reusable.models import BaseModel
 from user.models import Profile
+from reusable.models import BaseModel
 
 
 class Keyword(BaseModel):
