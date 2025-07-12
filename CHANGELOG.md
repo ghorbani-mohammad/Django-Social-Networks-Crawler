@@ -1,3 +1,12 @@
+## [1.45.1](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.45.0...v1.45.1) (2025-07-12)
+
+
+### Bug Fixes
+
+* **docker:** uncomment ports configuration for service in docker-compose.yml ([e22e495](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/e22e495824066b588bf59a0c64744edb446eddfc))
+
+
+
 # [1.45.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.44.6...v1.45.0) (2025-07-05)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **linkedin:** disable add permission for IgnoredJobAdmin ([6416622](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/641662232f353fa938ac68bed6534df9a9baa51c))
-
-
-
-## [1.44.3](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.44.2...v1.44.3) (2025-03-08)
-
-
-### Bug Fixes
-
-* **linkedin:** simplify company size extraction error handling ([c833686](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/c833686d1df51a4e8d5290ff054f595a52c3ef79))
 
 
 
