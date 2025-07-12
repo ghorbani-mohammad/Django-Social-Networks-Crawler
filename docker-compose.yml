@@ -81,8 +81,8 @@ services:
     restart: unless-stopped
     networks:
       - social_network
-    # ports:
-      # - 7900:7900
+    ports:
+      - 7900:7900
     env_file:
     - .env
     environment:
