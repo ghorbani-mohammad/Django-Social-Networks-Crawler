@@ -1,3 +1,12 @@
+## [1.45.2](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.45.1...v1.45.2) (2025-07-12)
+
+
+### Bug Fixes
+
+* **linkedin:** handle case where card ID cannot be extracted in process_article function ([9266c16](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/9266c1693bdc00cc0057c4e92bf4b000258aa1aa))
+
+
+
 ## [1.45.1](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.45.0...v1.45.1) (2025-07-12)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **twitter:** add Firefox options to remote webdriver initialization ([f0cf021](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/f0cf0215ac29015e9d4b44f98f461aa091ffb9bd))
-
-
-
-## [1.44.4](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.44.3...v1.44.4) (2025-03-15)
-
-
-### Bug Fixes
-
-* **linkedin:** disable add permission for IgnoredJobAdmin ([6416622](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/641662232f353fa938ac68bed6534df9a9baa51c))
 
 
 
