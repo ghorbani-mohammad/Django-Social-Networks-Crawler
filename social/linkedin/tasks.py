@@ -199,7 +199,8 @@ def get_linkedin_posts(channel_id):
     driver = initialize_linkedin_driver()
     driver.get(channel_url)
     scroll(driver, 1)
-    time.sleep(5)
+    wait = WebDriverWait(driver, 10)
+    wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, "feed-shared-update-v2")))
     try:
         articles = driver.find_elements(By.CLASS_NAME, "feed-shared-update-v2")
         for article in articles:
@@ -230,7 +231,7 @@ def sort_by_recent(driver):
     )
     if "recent" not in sort.text:
         sort.click()
-        time.sleep(5)
+        WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.CLASS_NAME, "artdeco-dropdown__content-inner")))
         sort_button = driver.find_element(
             "xpath",
             "//button[@class='display-flex \
@@ -239,7 +240,7 @@ def sort_by_recent(driver):
         )
         sort_button = sort_button.find_elements("tag name", "li")[1]
         sort_button.click()
-        time.sleep(5)
+        WebDriverWait(driver, 10).until(EC.invisibility_of_element_located((By.CLASS_NAME, "artdeco-dropdown__content-inner")))
     return driver
 
 
@@ -256,7 +257,8 @@ def get_linkedin_feed():
     )
     driver = sort_by_recent(driver)
     scroll(driver, 5)
-    time.sleep(5)
+    wait = WebDriverWait(driver, 10)
+    wait.until(EC.presence_of_all_elements_located((By.XPATH, './/div[starts-with(@data-id, "urn:li:activity:")]')))
     articles = driver.find_elements(
         By.XPATH,
         './/div[starts-with(@data-id, "urn:li:activity:")]',
@@ -491,7 +493,7 @@ def get_job_company_size(driver):
             By.CLASS_NAME, "job-details-jobs-unified-top-card__job-insight"
         )
         if not company_size_el:
-            return "N/A"
+            return "Cannot-extract-company-size"
         company_size = company_size_el[1].text
         return company_size.split("·")[0].replace("employees", "")
     except NoSuchElementException:
@@ -637,8 +639,8 @@ def get_job_page_posts(
     try:
         with initialize_linkedin_driver() as driver:
             prepare_driver(driver, url, starting_job)
-            time.sleep(5)
-            items = driver.find_elements(By.CLASS_NAME, "scaffold-layout__list-item")
+            wait = WebDriverWait(driver, 10)
+            items = wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, "scaffold-layout__list-item")))
             counter = process_items(
                 driver,
                 items,
