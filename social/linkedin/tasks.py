@@ -794,6 +794,9 @@ def process_articles(driver, articles, ignore_repetitive, page):
 def process_article(driver, article, ignore_repetitive, page):
     driver.execute_script("arguments[0].scrollIntoView();", article)
     post_id = get_card_id(article)
+    if post_id == "Cannot-extract-card-id":
+        logger.info("Cannot extract card id")
+        return
     if not post_id or (ignore_repetitive and DUPLICATE_CHECKER.exists(post_id)):
         logger.info(f"id is none or duplicate, id: {post_id}")
         return
