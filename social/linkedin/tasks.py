@@ -305,19 +305,19 @@ def sort_by_most_recent(driver):
         './/button[contains(@class, "search-reusables__filter-pill-button")]',
     )
     filter_button[len(filter_button) - 1].click()
-    time.sleep(2)
+    WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, './/label[contains(@for, "advanced-filter-sortBy-DD")]')))
     most_recent_input = driver.find_elements(
         By.XPATH,
         './/label[contains(@for, "advanced-filter-sortBy-DD")]',
     )
     most_recent_input[0].click()
-    time.sleep(2)
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, './/button[contains(@data-test-reusables-filters-modal-show-results-button, "true")]')))
     apply_button = driver.find_elements(
         By.XPATH,
         './/button[contains(@data-test-reusables-filters-modal-show-results-button, "true")]',
     )
     apply_button[0].click()
-    time.sleep(2)
+    WebDriverWait(driver, 10).until(EC.invisibility_of_element_located((By.CLASS_NAME, "artdeco-modal")))
     return driver
 
 
