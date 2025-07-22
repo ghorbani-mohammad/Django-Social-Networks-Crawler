@@ -1,3 +1,12 @@
+# [1.46.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.45.2...v1.46.0) (2025-07-22)
+
+
+### Features
+
+* **linkedin:** add actions for crawling pages in ExpressionSearchAdmin ([a730c22](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/a730c227ed343d5ff23cc3773dd45a26f64ee1cb))
+
+
+
 ## [1.45.2](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.45.1...v1.45.2) (2025-07-12)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **twitter:** update Twitter references to X and change cookie file names ([8b89056](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/8b89056e8072ec9284790b5fe71b835f1773e5d3))
-
-
-
-## [1.44.5](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.44.4...v1.44.5) (2025-03-15)
-
-
-### Bug Fixes
-
-* **twitter:** add Firefox options to remote webdriver initialization ([f0cf021](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/f0cf0215ac29015e9d4b44f98f461aa091ffb9bd))
 
 
 
