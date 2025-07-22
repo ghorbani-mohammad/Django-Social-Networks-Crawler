@@ -85,10 +85,12 @@ class ExpressionSearchAdmin(ReadOnlyAdminDateFieldsMIXIN):
     def page_link(self, obj):
         return format_html("<a href='{url}'>Link</a>", url=obj.url)
 
+    @admin.action(description="Crawl page")
     def crawl_page_action(self, request, queryset):
         for page in queryset:
             tasks.get_expression_search_posts.delay(page.pk)
 
+    @admin.action(description="Crawl page repetitive")
     def crawl_page_repetitive_action(self, request, queryset):
         for page in queryset:
             tasks.get_expression_search_posts.delay(page.pk, ignore_repetitive=False)
