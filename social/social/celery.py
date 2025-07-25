@@ -41,6 +41,6 @@ app.conf.beat_schedule = {
     },
     "check_twitter_search_pages": {
         "task": "twitter.tasks.check_twitter_pages",
-        "schedule": crontab(minute=0, hour="*/9"),
+        "schedule": crontab(minute=0, hour="*/1"),
     },
 }
