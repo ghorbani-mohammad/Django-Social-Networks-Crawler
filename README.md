@@ -32,6 +32,8 @@ You can have a look at its Django admin by guest user provided at below.
     * Currently I've defined some [**Search Pages**](https://social.m-gh.com/secret-admin/linkedin/expressionsearch/) and [**Job Pages**](https://social.m-gh.com/secret-admin/linkedin/jobpage/) for LinkedIn.
     You can see the result of crawled data at this [Telegram channel](https://t.me/linkedin_crawler)
 
-    **Example Output in Channel**
+---
 
-    <img src="linkedin_crawler.png" alt="LinkedIn Crawler Example" width="300" />
+### Example Output in Channel
+
+<img src="linkedin_crawler.png" alt="LinkedIn Crawler Example" width="300" />
