@@ -33,4 +33,5 @@ You can have a look at its Django admin by guest user provided at below.
     You can see the result of crawled data at this [Telegram channel](https://t.me/linkedin_crawler)
 
     **Example Output:**
-    ![LinkedIn Crawler Example](linkedin_crawler.png)
+
+    <img src="linkedin_crawler.png" alt="LinkedIn Crawler Example" width="300" />
