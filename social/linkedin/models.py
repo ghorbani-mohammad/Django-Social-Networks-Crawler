@@ -23,6 +23,7 @@ class IgnoringFilter(BaseModel):
     PLACE_CHOICES = ((LOCATION, LOCATION), (TITLE, TITLE), (COMPANY, COMPANY))
     place = models.CharField(choices=PLACE_CHOICES, max_length=15)
     keyword = models.TextField(null=True)
+    enable = models.BooleanField(default=True)
 
     def save(self, *args, **kwargs):
         if self.keyword:
@@ -79,7 +80,7 @@ class JobSearch(BaseModel):
             self.url,
             self.output_channel.pk,
             self.keywords_in_array,
-            self.ignore_filters.all(),
+            self.ignore_filters.filter(enable=True),
             self.just_easily_apply,
         )
 
