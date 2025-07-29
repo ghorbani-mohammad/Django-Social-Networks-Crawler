@@ -54,6 +54,7 @@ class IgnoredJobAdmin(ReadOnlyAdminDateFieldsMIXIN):
     readonly_fields = tuple(
         field.name for field in models.IgnoredJob._meta.get_fields()
     )
+    list_filter = ("reason",)
 
     def job_url(self, obj: models.IgnoredJob):
         return format_html("<a href='{url}'>Link</a>", url=obj.url)
