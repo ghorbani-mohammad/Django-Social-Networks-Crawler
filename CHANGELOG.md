@@ -1,3 +1,12 @@
+# [1.47.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.46.0...v1.47.0) (2025-07-29)
+
+
+### Features
+
+* **admin:** add list filter for reason in IgnoredJobAdmin ([aa18354](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/aa18354e9a3b5ce9281a70afac2a3eac0a8798ed))
+
+
+
 # [1.46.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.45.2...v1.46.0) (2025-07-22)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * **admin:** add actions for crawling job pages in JobSearchAdmin ([73e6d11](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/73e6d11e92d0d3f227df0dcb806ba577cfb2b02b))
-
-
-
-## [1.44.6](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.44.5...v1.44.6) (2025-03-15)
-
-
-### Bug Fixes
-
-* **twitter:** update Twitter references to X and change cookie file names ([8b89056](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/8b89056e8072ec9284790b5fe71b835f1773e5d3))
 
 
 
