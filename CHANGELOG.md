@@ -1,3 +1,12 @@
+# [1.48.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.47.0...v1.48.0) (2025-07-29)
+
+
+### Features
+
+* **models:** add enable field to IgnoringFilter ([bcbbde1](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/bcbbde1882004f85432bf9b5402d884db77f31e9))
+
+
+
 # [1.47.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.46.0...v1.47.0) (2025-07-29)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **docker:** uncomment ports configuration for service in docker-compose.yml ([e22e495](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/e22e495824066b588bf59a0c64744edb446eddfc))
-
-
-
-# [1.45.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.44.6...v1.45.0) (2025-07-05)
-
-
-### Features
-
-* **admin:** add actions for crawling job pages in JobSearchAdmin ([73e6d11](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/73e6d11e92d0d3f227df0dcb806ba577cfb2b02b))
 
 
 
