@@ -1,3 +1,12 @@
+## [1.49.1](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.49.0...v1.49.1) (2025-07-31)
+
+
+### Bug Fixes
+
+* **admin:** adjust ordering in JobSearchAdmin for improved sorting ([c06109e](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/c06109e6463d0b723444652ad546215f786883d5))
+
+
+
 # [1.49.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.48.0...v1.49.0) (2025-07-31)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * **linkedin:** add actions for crawling pages in ExpressionSearchAdmin ([a730c22](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/a730c227ed343d5ff23cc3773dd45a26f64ee1cb))
-
-
-
-## [1.45.2](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.45.1...v1.45.2) (2025-07-12)
-
-
-### Bug Fixes
-
-* **linkedin:** handle case where card ID cannot be extracted in process_article function ([9266c16](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/9266c1693bdc00cc0057c4e92bf4b000258aa1aa))
 
 
 
