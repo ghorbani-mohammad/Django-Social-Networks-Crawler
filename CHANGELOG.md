@@ -1,3 +1,12 @@
+# [1.49.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.48.0...v1.49.0) (2025-07-31)
+
+
+### Features
+
+* **admin:** add ordering to JobSearchAdmin for better sorting ([ac5d26d](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/ac5d26d461a34baa9a42a7e6d726f692d97af092))
+
+
+
 # [1.48.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.47.0...v1.48.0) (2025-07-29)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **linkedin:** handle case where card ID cannot be extracted in process_article function ([9266c16](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/9266c1693bdc00cc0057c4e92bf4b000258aa1aa))
-
-
-
-## [1.45.1](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.45.0...v1.45.1) (2025-07-12)
-
-
-### Bug Fixes
-
-* **docker:** uncomment ports configuration for service in docker-compose.yml ([e22e495](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/e22e495824066b588bf59a0c64744edb446eddfc))
 
 
 
