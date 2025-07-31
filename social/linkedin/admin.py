@@ -22,6 +22,7 @@ class JobSearchAdmin(ReadOnlyAdminDateFieldsMIXIN):
         "last_crawl_at",
         "last_crawl_count",
     )
+    ordering = ("enable", "-last_crawl_at")
 
     def page_link(self, obj):
         return format_html("<a href='{url}'>Link</a>", url=obj.url)
