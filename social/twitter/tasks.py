@@ -43,7 +43,7 @@ def get_driver():
     """
     try:
         # Create Firefox options
-        
+
         return webdriver.Remote(
             "http://social_firefox:4444/wd/hub",
             DesiredCapabilities.FIREFOX,

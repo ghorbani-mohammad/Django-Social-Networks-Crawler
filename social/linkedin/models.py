@@ -40,7 +40,9 @@ class JobSearch(BaseModel):
     enable = models.BooleanField(default=True)
     message = models.TextField(null=True, blank=True)
     last_crawl_at = models.DateTimeField(null=True, blank=True)
-    last_crawl_count = models.PositiveSmallIntegerField(null=True, blank=True, help_text="how many items was found")
+    last_crawl_count = models.PositiveSmallIntegerField(
+        null=True, blank=True, help_text="how many items was found"
+    )
     keywords = models.ManyToManyField(Keyword, blank=True)
     ignore_filters = models.ManyToManyField(IgnoringFilter, blank=True)
     just_easily_apply = models.BooleanField(default=False)
