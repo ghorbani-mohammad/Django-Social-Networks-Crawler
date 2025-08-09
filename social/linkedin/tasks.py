@@ -25,6 +25,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.webdriver.common.action_chains import ActionChains
 
 from linkedin import models as lin_models
 from reusable.models import get_network_model
@@ -576,13 +577,34 @@ def get_card_id(element) -> str:
     Returns:
         str: id of card
     """
+    # Try on the element itself first
+    try:
+        self_urn = element.get_attribute("data-urn")
+        if self_urn and self_urn.startswith("urn:li:activity:"):
+            return self_urn
+    except Exception:
+        pass
+    try:
+        self_id = element.get_attribute("data-id")
+        if self_id and self_id.startswith("urn:li:activity:"):
+            return self_id
+    except Exception:
+        pass
+
+    # Then try descendants: data-urn first, then data-id
     try:
         return element.find_element(
             By.XPATH,
             './/div[starts-with(@data-urn, "urn:li:activity:")]',
         ).get_attribute("data-urn")
     except NoSuchElementException:
-        return "Cannot-extract-card-id"
+        try:
+            return element.find_element(
+                By.XPATH,
+                './/div[starts-with(@data-id, "urn:li:activity:")]',
+            ).get_attribute("data-id")
+        except NoSuchElementException:
+            return "Cannot-extract-card-id"
 
 
 @shared_task
@@ -613,8 +635,7 @@ def update_job_search_last_crawl_at(page_id: int, counter: int):
     """
     # Simply update with the most recent crawl count
     lin_models.JobSearch.objects.filter(pk=page_id).update(
-        last_crawl_at=timezone.localtime(),
-        last_crawl_count=counter
+        last_crawl_at=timezone.localtime(), last_crawl_count=counter
     )
 
 
@@ -760,15 +781,20 @@ def get_expression_search_posts(page_id, ignore_repetitive=True):
         page = lin_models.ExpressionSearch.objects.get(pk=page_id)
         with initialize_linkedin_driver() as driver:
             driver.get(page.url)
-            wait = WebDriverWait(driver, 10)
+            WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.TAG_NAME, "body"))
+            )
+            # Load more results by scrolling before collecting cards
+            scroll(driver, 8)
+            time.sleep(3)
 
             try:
-                articles = wait.until(
-                    EC.presence_of_all_elements_located((By.CLASS_NAME, "artdeco-card"))
-                )
+                articles = driver.find_elements(By.CLASS_NAME, "artdeco-card")
             except StaleElementReferenceException:
                 logger.warning("Stale element reference exception")
                 return
+
+            logger.info("Detected %s potential cards", len(articles))
 
             counter = process_articles(driver, articles, ignore_repetitive, page)
 
@@ -782,8 +808,9 @@ def process_articles(driver, articles, ignore_repetitive, page):
     counter = 0
     for article in articles:
         try:
-            process_article(driver, article, ignore_repetitive, page)
-            counter += 1
+            sent = process_article(driver, article, ignore_repetitive, page)
+            if sent:
+                counter += 1
         except NoSuchElementException:
             logger.error("Element not found", exc_info=True)
         except TimeoutException:
@@ -792,14 +819,39 @@ def process_articles(driver, articles, ignore_repetitive, page):
 
 
 def process_article(driver, article, ignore_repetitive, page):
-    driver.execute_script("arguments[0].scrollIntoView();", article)
+    driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", article)
+    try:
+        ActionChains(driver).move_to_element(article).perform()
+    except Exception:
+        # Ignore move errors; scrollIntoView is usually enough
+        pass
+    # Give the DOM a moment to lazy-load nested content
+    try:
+        WebDriverWait(driver, 5).until(
+            lambda d: (
+                len(
+                    article.find_elements(
+                        By.XPATH, './/div[starts-with(@data-urn, "urn:li:activity:")]'
+                    )
+                )
+                > 0
+                or len(
+                    article.find_elements(
+                        By.XPATH, './/div[starts-with(@data-id, "urn:li:activity:")]'
+                    )
+                )
+                > 0
+            )
+        )
+    except TimeoutException:
+        pass
     post_id = get_card_id(article)
     if post_id == "Cannot-extract-card-id":
         logger.info("Cannot extract card id")
-        return
+        return False
     if not post_id or (ignore_repetitive and DUPLICATE_CHECKER.exists(post_id)):
         logger.info(f"id is none or duplicate, id: {post_id}")
-        return
+        return False
     DUPLICATE_CHECKER.set(post_id, "", ex=86400 * 30)
     body = extract_body(article)
     link = f"https://www.linkedin.com/feed/update/{post_id}/"
@@ -808,6 +860,7 @@ def process_article(driver, article, ignore_repetitive, page):
     not_tasks.send_message_to_telegram_channel(
         strip_tags(message), page.output_channel.pk
     )
+    return True
 
 
 def extract_body(article):
@@ -816,8 +869,19 @@ def extract_body(article):
             By.CLASS_NAME, "feed-shared-update-v2__description"
         ).text
     except NoSuchElementException:
-        logger.info("No such element exception")
-        return "Cannot-extract-body"
+        try:
+            return article.find_element(
+                By.CLASS_NAME, "feed-shared-update-v2__commentary"
+            ).text
+        except NoSuchElementException:
+            try:
+                return article.find_element(
+                    By.XPATH,
+                    './/*[contains(@class, "update-components-text") or contains(@class, "break-words")]',
+                ).text
+            except NoSuchElementException:
+                logger.info("No such element exception")
+                return "Cannot-extract-body"
 
 
 @shared_task
