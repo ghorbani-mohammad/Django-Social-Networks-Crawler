@@ -1,3 +1,12 @@
+# [1.52.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.51.0...v1.52.0) (2025-08-10)
+
+
+### Features
+
+* **linkedin:** add collapse consequtive new-lines to expression search ([ba9aed1](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/ba9aed194deb6d766767e94789f1200e915bd16e))
+
+
+
 # [1.51.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.50.0...v1.51.0) (2025-08-10)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **admin:** adjust ordering in JobSearchAdmin for improved sorting ([c06109e](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/c06109e6463d0b723444652ad546215f786883d5))
-
-
-
-# [1.49.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.48.0...v1.49.0) (2025-07-31)
-
-
-### Features
-
-* **admin:** add ordering to JobSearchAdmin for better sorting ([ac5d26d](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/ac5d26d461a34baa9a42a7e6d726f692d97af092))
 
 
 
