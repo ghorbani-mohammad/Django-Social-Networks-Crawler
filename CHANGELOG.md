@@ -1,3 +1,12 @@
+# [1.50.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.49.2...v1.50.0) (2025-08-10)
+
+
+### Features
+
+* **linkedin:** enhance expression searchs with html supports in messages ([ed96a53](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/ed96a537744b5fd79601cd8ea03bd14b3ec5fb74))
+
+
+
 ## [1.49.2](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.49.1...v1.49.2) (2025-08-09)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * **models:** add enable field to IgnoringFilter ([bcbbde1](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/bcbbde1882004f85432bf9b5402d884db77f31e9))
-
-
-
-# [1.47.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.46.0...v1.47.0) (2025-07-29)
-
-
-### Features
-
-* **admin:** add list filter for reason in IgnoredJobAdmin ([aa18354](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/aa18354e9a3b5ce9281a70afac2a3eac0a8798ed))
 
 
 
