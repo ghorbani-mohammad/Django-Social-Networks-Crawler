@@ -30,7 +30,7 @@ def send_telegram_message(message):
 
 
 @shared_task()
-def send_message_to_telegram_channel(message, channel_pk):
+def send_message_to_telegram_channel(message, channel_pk, html=False):
     """This function gets a string message and sends it to specific channel.
 
     Args:
@@ -45,9 +45,14 @@ def send_message_to_telegram_channel(message, channel_pk):
 
     bot = models.TelegramBot.objects.last()
     channel_output = channel_class.objects.get(pk=channel_pk)
-    resp = utils.telegram_bot_send_text(
-        bot.telegram_token, channel_output.username, message
-    )
+    if html:
+        resp = utils.telegram_bot_send_html_text(
+            bot.telegram_token, channel_output.username, message
+        )
+    else:
+        resp = utils.telegram_bot_send_text(
+            bot.telegram_token, channel_output.username, message
+        )
     if not resp["ok"]:
         logger.error(
             "%s\n\nmessage was: %s\n\n%s",
