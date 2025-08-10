@@ -1,3 +1,12 @@
+# [1.51.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.50.0...v1.51.0) (2025-08-10)
+
+
+### Features
+
+* **linkedin:** add language filter expression searchs ([a21b4df](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/a21b4df4612592ce8e9dc5f985f90efbde362a0a))
+
+
+
 # [1.50.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.49.2...v1.50.0) (2025-08-10)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * **admin:** add ordering to JobSearchAdmin for better sorting ([ac5d26d](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/ac5d26d461a34baa9a42a7e6d726f692d97af092))
-
-
-
-# [1.48.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.47.0...v1.48.0) (2025-07-29)
-
-
-### Features
-
-* **models:** add enable field to IgnoringFilter ([bcbbde1](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/bcbbde1882004f85432bf9b5402d884db77f31e9))
 
 
 
