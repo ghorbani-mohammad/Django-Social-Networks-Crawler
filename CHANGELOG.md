@@ -1,3 +1,12 @@
+# [1.53.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.52.0...v1.53.0) (2025-08-10)
+
+
+### Features
+
+* **linkedin:** add strip accessablity to expression search ([e17fd85](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/e17fd85056bc0681889a1fe57d2d08e59a064f99))
+
+
+
 # [1.52.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.51.0...v1.52.0) (2025-08-10)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **linkedin:** improves getting posts id in expression search ([1c59f19](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/1c59f19fc8849870efc9196db8596645aaac4c8d))
-
-
-
-## [1.49.1](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.49.0...v1.49.1) (2025-07-31)
-
-
-### Bug Fixes
-
-* **admin:** adjust ordering in JobSearchAdmin for improved sorting ([c06109e](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/c06109e6463d0b723444652ad546215f786883d5))
 
 
 
