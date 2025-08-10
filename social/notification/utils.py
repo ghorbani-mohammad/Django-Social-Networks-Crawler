@@ -61,3 +61,17 @@ def collapse_newlines(text: str, max_consecutive: int = 1) -> str:
     normalized = text.replace("\r\n", "\n").replace("\r", "\n").strip()
     collapsed = re.sub(r"\n\s*\n+", "\n" * max_consecutive, normalized)
     return collapsed
+
+
+def strip_accessibility_hashtag_labels(text: str) -> str:
+    """Remove LinkedIn a11y 'hashtag' labels while preserving real hashtags.
+
+    - Removes standalone lines that are just 'hashtag' (case-insensitive)
+    - Removes the word 'hashtag' when it appears immediately before an actual
+      hashtag token (e.g., "hashtag #EdTech" -> "#EdTech")
+    """
+    # Remove standalone 'hashtag' lines
+    text = re.sub(r"(?im)^(?:\s*)hashtag\s*$\n?", "", text)
+    # Remove 'hashtag ' before a real hashtag token
+    text = re.sub(r"(?i)\bhashtag\s+(?=#[\w\d_])", "", text)
+    return text
