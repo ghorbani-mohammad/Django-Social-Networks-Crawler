@@ -1,3 +1,12 @@
+# [1.54.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.53.0...v1.54.0) (2025-08-10)
+
+
+### Features
+
+* **linkedin:** implement IgnoredJob API with permissions and serializers ([1b2e037](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/1b2e03756ec7b4421742ca26d06332bd1db99265))
+
+
+
 # [1.53.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.52.0...v1.53.0) (2025-08-10)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * **linkedin:** enhance expression searchs with html supports in messages ([ed96a53](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/ed96a537744b5fd79601cd8ea03bd14b3ec5fb74))
-
-
-
-## [1.49.2](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.49.1...v1.49.2) (2025-08-09)
-
-
-### Bug Fixes
-
-* **linkedin:** improves getting posts id in expression search ([1c59f19](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/1c59f19fc8849870efc9196db8596645aaac4c8d))
 
 
 
