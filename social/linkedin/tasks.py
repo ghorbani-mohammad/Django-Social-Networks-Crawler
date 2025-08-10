@@ -32,7 +32,12 @@ from reusable.models import get_network_model
 from reusable.other import only_one_concurrency
 from reusable.browser import scroll
 from notification import tasks as not_tasks
-from notification.utils import telegram_text_purify, html_link, limit_words
+from notification.utils import (
+    telegram_text_purify,
+    html_link,
+    limit_words,
+    collapse_newlines,
+)
 from ai.chatgpt.main import get_cover_letter
 
 logger = get_task_logger(__name__)
@@ -854,6 +859,7 @@ def process_article(driver, article, ignore_repetitive, page):
         return False
     DUPLICATE_CHECKER.set(post_id, "", ex=86400 * 30)
     body = extract_body(article)
+    body = collapse_newlines(body, 1)
     # Ignore articles that are not in English or Persian
     language = get_language(body)
     if language not in ("en", "fa"):
