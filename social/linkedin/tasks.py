@@ -782,11 +782,11 @@ def update_expression_search_last_crawl_at(page_id):
 
 
 @shared_task
-def get_expression_search_posts(page_id, ignore_repetitive=True):
+def get_expression_search_posts(expr_id, ignore_repetitive=True):
     try:
-        page = lin_models.ExpressionSearch.objects.get(pk=page_id)
+        expr = lin_models.ExpressionSearch.objects.get(pk=expr_id)
         with initialize_linkedin_driver() as driver:
-            driver.get(page.url)
+            driver.get(expr.url)
             WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.TAG_NAME, "body"))
             )
@@ -802,19 +802,19 @@ def get_expression_search_posts(page_id, ignore_repetitive=True):
 
             logger.info("Detected %s potential cards", len(articles))
 
-            counter = process_articles(driver, articles, ignore_repetitive, page)
+            counter = process_articles(driver, articles, ignore_repetitive, expr)
 
-        logger.info("found %s post in page %s", counter, page_id)
-        update_expression_search_last_crawl_at.delay(page.pk)
+        logger.info("found %s post in page %s", counter, expr_id)
+        update_expression_search_last_crawl_at.delay(expr.pk)
     except Exception as e:
         logger.error(f"Error in get_expression_search_posts: {e}")
 
 
-def process_articles(driver, articles, ignore_repetitive, page):
+def process_articles(driver, articles, ignore_repetitive, expr):
     counter = 0
     for article in articles:
         try:
-            sent = process_article(driver, article, ignore_repetitive, page)
+            sent = process_article(driver, article, ignore_repetitive, expr)
             if sent:
                 counter += 1
         except NoSuchElementException:
@@ -824,7 +824,7 @@ def process_articles(driver, articles, ignore_repetitive, page):
     return counter
 
 
-def process_article(driver, article, ignore_repetitive, page):
+def process_article(driver, article, ignore_repetitive, expr):
     driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", article)
     try:
         ActionChains(driver).move_to_element(article).perform()
@@ -862,6 +862,7 @@ def process_article(driver, article, ignore_repetitive, page):
     body = extract_body(article)
     body = strip_accessibility_hashtag_labels(body)
     body = collapse_newlines(body, 1)
+    body = f"{expr.name}\n\n{body}"
     # Ignore articles that are not in English or Persian
     language = get_language(body)
     if language not in ("en", "fa"):
@@ -874,7 +875,7 @@ def process_article(driver, article, ignore_repetitive, page):
     message = f"{body}\n\n{html_link(link, link)}"
     time.sleep(2)  # Delay between sending each message
     not_tasks.send_message_to_telegram_channel(
-        message, page.output_channel.pk, html=True
+        message, expr.output_channel.pk, html=True
     )
     return True
 
