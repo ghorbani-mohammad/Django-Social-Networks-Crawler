@@ -1,12 +1,12 @@
 # pylint: skip-file
 import os
-import sys
 import random
-from openpyxl import load_workbook
-from django.utils.timezone import make_aware
+import sys
 
 import django
+from django.utils.timezone import make_aware
 from network.models import Channel, Post
+from openpyxl import load_workbook
 
 
 def initial():

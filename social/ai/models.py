@@ -1,8 +1,8 @@
 import logging
 
 from django.db import models, transaction
-
 from user.models import Profile
+
 from reusable.models import BaseModel
 from . import tasks
 

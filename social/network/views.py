@@ -1,14 +1,14 @@
 import logging
 
 from django.utils import timezone
-from rest_framework.views import APIView
-from rest_framework.generics import ListAPIView
-from rest_framework import filters as rf_filters
-from rest_framework.viewsets import ModelViewSet
-from rest_framework.pagination import PageNumberPagination
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters as rf_filters
+from rest_framework.generics import ListAPIView
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
 
-from . import models, serializers, filters, utils
+from . import filters, models, serializers, utils
 
 logger = logging.getLogger(__name__)
 

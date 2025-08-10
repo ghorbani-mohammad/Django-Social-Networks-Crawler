@@ -1,45 +1,39 @@
-import time
-import sys
 import pickle
+import sys
+import time
 import traceback
-from typing import Tuple, Optional
-import redis
+from typing import Optional, Tuple
 
+import redis
+from celery import shared_task
+from celery.utils.log import get_task_logger
 from django.conf import settings
 from django.utils import timezone
 from django.utils.html import strip_tags
-from celery import shared_task
-from celery.utils.log import get_task_logger
 from langdetect import detect
 from langdetect.lang_detect_exception import LangDetectException
-from urllib3.exceptions import MaxRetryError
 from selenium import webdriver
-from selenium.common.exceptions import (
-    NoSuchElementException,
-    TimeoutException,
-    SessionNotCreatedException,
-    StaleElementReferenceException,
-)
-from selenium.webdriver.remote.webelement import WebElement
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.common.exceptions import (NoSuchElementException,
+                                        SessionNotCreatedException,
+                                        StaleElementReferenceException,
+                                        TimeoutException)
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
+from urllib3.exceptions import MaxRetryError
 
+from ai.chatgpt.main import get_cover_letter
 from linkedin import models as lin_models
+from notification import tasks as not_tasks
+from notification.utils import (collapse_newlines, html_link, limit_words,
+                                strip_accessibility_hashtag_labels,
+                                telegram_text_purify)
+from reusable.browser import scroll
 from reusable.models import get_network_model
 from reusable.other import only_one_concurrency
-from reusable.browser import scroll
-from notification import tasks as not_tasks
-from notification.utils import (
-    telegram_text_purify,
-    html_link,
-    limit_words,
-    collapse_newlines,
-    strip_accessibility_hashtag_labels,
-)
-from ai.chatgpt.main import get_cover_letter
 
 logger = get_task_logger(__name__)
 MINUTE = 60

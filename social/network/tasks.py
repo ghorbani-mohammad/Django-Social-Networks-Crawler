@@ -1,21 +1,19 @@
-from io import BytesIO
 import subprocess
-import requests
+from io import BytesIO
 
+import requests
+from celery import Task, shared_task
+from celery.utils.log import get_task_logger
 from django.conf import settings
+from django.core.files.base import File
 from django.db import transaction
 from django.utils import timezone
-from django.core.files.base import File
-from celery import Task
-from celery import shared_task
-from celery.utils.log import get_task_logger
 from openpyxl import Workbook
-from openpyxl.styles import Font, Alignment, Border, Side
+from openpyxl.styles import Alignment, Border, Font, Side
 
-from twitter import tasks as twi_tasks
 from linkedin import tasks as lin_tasks
 from reusable.models import get_network_model
-
+from twitter import tasks as twi_tasks
 
 logger = get_task_logger(__name__)
 

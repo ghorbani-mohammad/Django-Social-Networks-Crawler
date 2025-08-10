@@ -2,11 +2,10 @@
 import os
 import sys
 from time import sleep
+
 import django
-
-
 from network.models import Channel, Post
-from network.tasks import extract_ner, extract_keywords
+from network.tasks import extract_keywords, extract_ner
 
 
 def initial():

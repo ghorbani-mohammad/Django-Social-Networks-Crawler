@@ -1,13 +1,11 @@
-from operator import or_
-from operator import and_
 from functools import reduce
-from dateutil.relativedelta import relativedelta
+from operator import and_, or_
 
-from django.utils import timezone
+from dateutil.relativedelta import relativedelta
 from django.db.models import Count, Q
 from django.db.models.functions import TruncDate, TruncHour, TruncMonth
-
-from network.models import Network, Channel
+from django.utils import timezone
+from network.models import Channel, Network
 
 KEYWORD_NUMBER = 20
 CATEGORY_NUMBER = 5

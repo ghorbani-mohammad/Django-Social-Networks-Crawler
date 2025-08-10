@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+
 import django
 import sentry_sdk
 from envparse import env
