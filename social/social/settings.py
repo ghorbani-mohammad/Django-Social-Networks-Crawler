@@ -123,6 +123,10 @@ CELERY_TIMEZONE = "Asia/Tehran"
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWED_ORIGIN_REGEXES = ["*"]
 
+# Public API key for read-only endpoints used by public clients
+# Set this in environment variables.
+PUBLIC_API_KEY = env.str("PUBLIC_API_KEY", default=None)
+
 if (dsn := env.str("SENTRY_DSN", default=None)) is not None:
     sentry_sdk.init(
         dsn=dsn,
