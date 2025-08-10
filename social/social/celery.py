@@ -38,7 +38,7 @@ app.conf.beat_schedule = {
     },
     "check_linkedin_search_pages": {
         "task": "linkedin.tasks.check_expression_search_pages",
-        "schedule": crontab(minute="*/17"),
+        "schedule": crontab(minute="*/23"),
     },
     "check_twitter_search_pages": {
         "task": "twitter.tasks.check_twitter_pages",
