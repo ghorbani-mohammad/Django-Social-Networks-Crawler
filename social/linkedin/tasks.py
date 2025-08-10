@@ -37,6 +37,7 @@ from notification.utils import (
     html_link,
     limit_words,
     collapse_newlines,
+    strip_accessibility_hashtag_labels,
 )
 from ai.chatgpt.main import get_cover_letter
 
@@ -859,6 +860,7 @@ def process_article(driver, article, ignore_repetitive, page):
         return False
     DUPLICATE_CHECKER.set(post_id, "", ex=86400 * 30)
     body = extract_body(article)
+    body = strip_accessibility_hashtag_labels(body)
     body = collapse_newlines(body, 1)
     # Ignore articles that are not in English or Persian
     language = get_language(body)
