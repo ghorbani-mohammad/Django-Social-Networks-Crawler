@@ -32,7 +32,7 @@ from reusable.models import get_network_model
 from reusable.other import only_one_concurrency
 from reusable.browser import scroll
 from notification import tasks as not_tasks
-from notification.utils import telegram_text_purify
+from notification.utils import telegram_text_purify, html_link, limit_words
 from ai.chatgpt.main import get_cover_letter
 
 logger = get_task_logger(__name__)
@@ -855,10 +855,11 @@ def process_article(driver, article, ignore_repetitive, page):
     DUPLICATE_CHECKER.set(post_id, "", ex=86400 * 30)
     body = extract_body(article)
     link = f"https://www.linkedin.com/feed/update/{post_id}/"
-    message = f"{telegram_text_purify(body)}\n\n{link}"
+    body = limit_words(body, 50)
+    message = f"{body}\n\n{html_link(link, link)}"
     time.sleep(2)  # Delay between sending each message
     not_tasks.send_message_to_telegram_channel(
-        strip_tags(message), page.output_channel.pk
+        message, page.output_channel.pk, html=True
     )
     return True
 
