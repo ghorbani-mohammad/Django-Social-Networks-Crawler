@@ -1,11 +1,10 @@
 import redis
-
 from django.contrib import admin
-from reusable.other import TIME_FORMAT
-from reusable.admins import ReadOnlyAdminDateFieldsMIXIN
 
-from twitter import tasks as twi_tasks
 from linkedin import tasks as lin_tasks
+from reusable.admins import ReadOnlyAdminDateFieldsMIXIN
+from reusable.other import TIME_FORMAT
+from twitter import tasks as twi_tasks
 from . import models
 
 

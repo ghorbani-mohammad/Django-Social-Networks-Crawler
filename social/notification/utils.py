@@ -1,7 +1,8 @@
-import requests
 import html
 import json
 import re
+
+import requests
 
 
 def limit_words(text: str, max_words: int = 100) -> str:

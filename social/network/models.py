@@ -1,15 +1,16 @@
 from os import path
+
 from django.conf import settings
+from django.core.validators import MinValueValidator
+from django.db import models, transaction
+from django.template.defaultfilters import truncatechars
 from django.utils import timezone
 from django.utils.html import format_html
-from django.db import models, transaction
-from django.core.validators import MinValueValidator
-from django.template.defaultfilters import truncatechars
 
-from reusable.models import BaseModel
-from reusable.admins import url_to_edit_object
-from twitter import tasks as twi_tasks
 from linkedin import tasks as lin_tasks
+from reusable.admins import url_to_edit_object
+from reusable.models import BaseModel
+from twitter import tasks as twi_tasks
 from . import tasks
 
 

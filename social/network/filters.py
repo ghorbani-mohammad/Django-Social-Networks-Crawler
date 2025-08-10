@@ -1,9 +1,5 @@
-from django_filters import (
-    FilterSet,
-    DateTimeFromToRangeFilter,
-    CharFilter,
-    NumberFilter,
-)
+from django_filters import (CharFilter, DateTimeFromToRangeFilter, FilterSet,
+                            NumberFilter)
 
 from . import models
 

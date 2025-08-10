@@ -1,6 +1,6 @@
 from django.db import models
-
 from user.models import Profile
+
 from reusable.models import BaseModel
 
 

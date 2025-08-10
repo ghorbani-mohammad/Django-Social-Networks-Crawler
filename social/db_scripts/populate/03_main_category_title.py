@@ -1,11 +1,10 @@
 # pylint: skip-file
+import logging
 import os
 import sys
-import logging
+
 import django
 from django.utils import timezone
-
-
 from network.models import Post
 from network.tasks import extract_categories
 

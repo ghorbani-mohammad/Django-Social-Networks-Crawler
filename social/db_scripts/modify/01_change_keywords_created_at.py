@@ -1,7 +1,7 @@
 # pylint: skip-file
+import datetime
 import os
 import sys
-import datetime
 
 import django
 from network.models import Keyword

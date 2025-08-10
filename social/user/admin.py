@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from . import models
 from reusable.admins import ReadOnlyAdminDateFieldsMIXIN
+from . import models
 
 
 @admin.register(models.Profile)

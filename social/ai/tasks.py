@@ -1,8 +1,8 @@
 from celery import shared_task
 from celery.utils.log import get_task_logger
+
 from . import models
 from .chatgpt.main import get_cover_letter
-
 
 logger = get_task_logger(__name__)
 

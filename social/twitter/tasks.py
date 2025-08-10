@@ -1,22 +1,22 @@
-import time
 import pickle
 import random
+import time
 import traceback
 
-from urllib3.exceptions import MaxRetryError
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-from selenium.common.exceptions import TimeoutException
-from selenium.common.exceptions import NoSuchElementException
-from selenium.common.exceptions import SessionNotCreatedException
-from django.utils import timezone
-from django.utils.html import strip_tags
-from django.conf import settings
-from django.core.cache import caches
 from celery import shared_task
 from celery.utils.log import get_task_logger
+from django.conf import settings
+from django.core.cache import caches
+from django.utils import timezone
+from django.utils.html import strip_tags
+from selenium import webdriver
+from selenium.common.exceptions import (NoSuchElementException,
+                                        SessionNotCreatedException,
+                                        TimeoutException)
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.webdriver.common.keys import Keys
+from urllib3.exceptions import MaxRetryError
 
 from notification import tasks as not_tasks
 from notification import utils as not_utils
