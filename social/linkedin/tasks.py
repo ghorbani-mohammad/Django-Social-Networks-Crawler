@@ -854,6 +854,11 @@ def process_article(driver, article, ignore_repetitive, page):
         return False
     DUPLICATE_CHECKER.set(post_id, "", ex=86400 * 30)
     body = extract_body(article)
+    # Ignore articles that are not in English or Persian
+    language = get_language(body)
+    if language not in ("en", "fa"):
+        logger.info(f"Skipping post {post_id} due to non-supported language: {language}")
+        return False
     link = f"https://www.linkedin.com/feed/update/{post_id}/"
     body = limit_words(body, 50)
     message = f"{body}\n\n{html_link(link, link)}"
