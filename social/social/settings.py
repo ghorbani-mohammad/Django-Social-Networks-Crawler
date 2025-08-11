@@ -246,3 +246,8 @@ if EMAIL_HOST_USER and ADMIN_EMAIL_LOG:
             },
         },
     }
+
+REST_FRAMEWORK = {
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
+    "PAGE_SIZE": 10,
+}
