@@ -856,6 +856,22 @@ def process_article(driver, article, ignore_repetitive, expr):
     body = extract_body(article)
     body = strip_accessibility_hashtag_labels(body)
     body = collapse_newlines(body, 1)
+    # Skip posts containing ignored keywords related to the expression's ignored categories
+    try:
+        ignore_categories = expr.ignore_categories.filter(enable=True)
+        if ignore_categories.exists():
+            ignored_keywords = lin_models.IgnoringFilter.objects.filter(
+                enable=True, category__in=ignore_categories
+            ).values_list("keyword", flat=True)
+            body_lower = body.lower()
+            for ignored_keyword in ignored_keywords:
+                if ignored_keyword and ignored_keyword in body_lower:
+                    logger.info(
+                        f"Skipping post {post_id} due to ignored keyword: {ignored_keyword}"
+                    )
+                    return False
+    except Exception:
+        logger.error("Error checking ignored keywords", exc_info=True)
     body = f"{expr.name}\n\n{body}"
     # Ignore articles that are not in English or Persian
     language = get_language(body)
