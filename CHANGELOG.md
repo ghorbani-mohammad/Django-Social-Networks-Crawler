@@ -1,3 +1,13 @@
+# [1.55.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.54.0...v1.55.0) (2025-08-11)
+
+
+### Features
+
+* **linkedin:** add ignore checker to expression search ([7c1d4a2](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/7c1d4a2b939ff4afd9633a80b7de402c7cc6c3f0))
+* **linkedin:** add IgnoringFilterCategory ([8ef5409](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/8ef540943a64b16f0c06d3d0988c81e2ac2f6548))
+
+
+
 # [1.54.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.53.0...v1.54.0) (2025-08-10)
 
 
@@ -31,15 +41,6 @@
 ### Features
 
 * **linkedin:** add language filter expression searchs ([a21b4df](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/a21b4df4612592ce8e9dc5f985f90efbde362a0a))
-
-
-
-# [1.50.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.49.2...v1.50.0) (2025-08-10)
-
-
-### Features
-
-* **linkedin:** enhance expression searchs with html supports in messages ([ed96a53](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/ed96a537744b5fd79601cd8ea03bd14b3ec5fb74))
 
 
 
