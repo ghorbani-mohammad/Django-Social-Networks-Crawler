@@ -16,6 +16,14 @@ class Keyword(BaseModel):
         return f"({self.pk} - {self.name})"
 
 
+class IgnoringFilterCategory(BaseModel):
+    name = models.CharField(max_length=100)
+    enable = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"({self.pk} - {self.name})"
+
+
 class IgnoringFilter(BaseModel):
     TITLE = "title"
     COMPANY = "company"
@@ -24,6 +32,9 @@ class IgnoringFilter(BaseModel):
     place = models.CharField(choices=PLACE_CHOICES, max_length=15)
     keyword = models.TextField(null=True)
     enable = models.BooleanField(default=True)
+    category = models.ForeignKey(
+        IgnoringFilterCategory, on_delete=models.CASCADE, null=True, blank=True
+    )
 
     def save(self, *args, **kwargs):
         if self.keyword:
@@ -115,3 +126,4 @@ class ExpressionSearch(BaseModel):
         null=True,
         related_name="linkedin_expression_searches",
     )
+    ignore_categories = models.ManyToManyField(IgnoringFilterCategory, blank=True)

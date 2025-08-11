@@ -100,3 +100,8 @@ class ExpressionSearchAdmin(ReadOnlyAdminDateFieldsMIXIN):
             tasks.get_expression_search_posts.delay(page.pk, ignore_repetitive=False)
 
     actions = (crawl_page_action, crawl_page_repetitive_action)
+
+
+@admin.register(models.IgnoringFilterCategory)
+class IgnoringFilterCategoryAdmin(ReadOnlyAdminDateFieldsMIXIN):
+    list_display = ("pk", "name", "enable", "created_at")
