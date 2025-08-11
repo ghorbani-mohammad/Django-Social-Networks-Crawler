@@ -865,7 +865,7 @@ def process_article(driver, article, ignore_repetitive, expr):
             ).values_list("keyword", flat=True)
             body_lower = body.lower()
             for ignored_keyword in ignored_keywords:
-                if ignored_keyword and ignored_keyword in body_lower:
+                if ignored_keyword in body_lower:
                     logger.info(
                         f"Skipping post {post_id} due to ignored keyword: {ignored_keyword}"
                     )
