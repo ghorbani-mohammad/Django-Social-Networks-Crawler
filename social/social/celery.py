@@ -44,4 +44,8 @@ app.conf.beat_schedule = {
         "task": "twitter.tasks.check_twitter_pages",
         "schedule": crontab(minute=0, hour="*/4"),
     },
+    # "scan_ignored_jobs_for_tags": {
+    #     "task": "linkedin.tasks.find_tags_in_ignored_jobs",
+    #     "schedule": crontab(minute="*/5"),
+    # },
 }
