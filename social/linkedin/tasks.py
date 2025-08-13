@@ -936,3 +936,49 @@ def store_ignored_content(job_detail, reason: str):
     ]
     job_detail["reason"] = reason
     lin_models.IgnoredJob.objects.create(**job_detail)
+
+
+@shared_task
+def find_tags_in_ignored_jobs(limit: int = 0):
+    """Scan IgnoredJob title/description for Tag names and report matches.
+
+    Args:
+        limit (int): If > 0, only scan the most recent N IgnoredJob rows.
+
+    Returns:
+        list[dict]: Each item like {"ignored_job_id": int, "tags": list[str]}.
+    """
+
+    #TODO: 
+    limit = 50
+
+    tag_model = get_network_model("Tag")
+    tag_names = list(tag_model.objects.values_list("name", flat=True))
+    if not tag_names:
+        logger.info("No tags defined; skipping find_tags_in_ignored_jobs")
+        return []
+
+    # Pre-compute lower-cased names for substring checks
+    tag_name_pairs = [(name, name.lower()) for name in tag_names if name]
+
+    queryset = lin_models.IgnoredJob.objects.order_by("-created_at")
+    if limit and limit > 0:
+        queryset = queryset[:limit]
+
+    results = []
+    for ignored_job in queryset.iterator():
+        haystack = f"{ignored_job.title or ''} {ignored_job.description or ''}".lower()
+        if not haystack.strip():
+            continue
+        matched = [orig for (orig, low) in tag_name_pairs if low in haystack]
+        if matched:
+            logger.info(
+                "IgnoredJob(%s) matched tags: %s | url=%s",
+                ignored_job.pk,
+                ", ".join(matched),
+                ignored_job.url,
+            )
+            results.append({"ignored_job_id": ignored_job.pk, "tags": matched})
+
+    logger.info("find_tags_in_ignored_jobs completed; %s jobs with matches", len(results))
+    return results
