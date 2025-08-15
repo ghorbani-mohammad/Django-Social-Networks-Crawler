@@ -514,7 +514,7 @@ def check_keywords(body, keywords):
     for keyword in keywords:
         if keyword.lower() not in body:
             continue
-        result += f"\n{keyword}: ✅"
+        result += f"\n#{keyword}"
     return result
 
 
@@ -541,6 +541,7 @@ def send_notification(message, data, keywords, output_channel_pk, cover_letter: 
     not_tasks.send_message_to_telegram_channel(
         message,
         output_channel_pk,
+        True,
     )
 
 
