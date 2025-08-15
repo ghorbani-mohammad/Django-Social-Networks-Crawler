@@ -966,18 +966,21 @@ def check_expression_search_pages():
 
 @shared_task
 def store_ignored_content(job_detail, reason: str):
-    job_detail.pop("company_size", None)  # Remove extra key
-    job_detail.pop("easy_apply", None)  # Remove extra key
-    job_detail["title"] = job_detail["title"][: max(300, len(job_detail["title"]))]
-    job_detail["location"] = job_detail["location"][
-        : max(200, len(job_detail["location"]))
-    ]
-    job_detail["company"] = job_detail["company"][
-        : max(100, len(job_detail["company"]))
-    ]
-    job_detail["language"] = job_detail["language"][
-        : max(40, len(job_detail["language"]))
-    ]
+    # Remove keys not present on IgnoredJob model
+    job_detail.pop("company_size", None)
+    job_detail.pop("easy_apply", None)
+    job_detail.pop("network_id", None)
+
+    # Truncate fields to model max lengths (only if they are strings)
+    if isinstance(job_detail.get("title"), str):
+        job_detail["title"] = job_detail["title"][:300]
+    if isinstance(job_detail.get("location"), str):
+        job_detail["location"] = job_detail["location"][:200]
+    if isinstance(job_detail.get("company"), str):
+        job_detail["company"] = job_detail["company"][:100]
+    if isinstance(job_detail.get("language"), str):
+        job_detail["language"] = job_detail["language"][:40]
+
     job_detail["reason"] = reason
     lin_models.IgnoredJob.objects.create(**job_detail)
 
