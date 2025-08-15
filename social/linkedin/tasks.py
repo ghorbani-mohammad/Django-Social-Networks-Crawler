@@ -29,6 +29,7 @@ from ai.chatgpt.main import get_cover_letter
 from linkedin import models as lin_models
 from notification import tasks as not_tasks
 from notification.utils import (collapse_newlines, html_link, limit_words,
+                                normalize_job_message_spacing,
                                 strip_accessibility_hashtag_labels,
                                 telegram_text_purify)
 from reusable.browser import scroll
@@ -509,13 +510,17 @@ def get_language(description):
 
 
 def check_keywords(body, keywords):
-    result = ""
-    body = body.lower()
+    body_lower = body.lower() if isinstance(body, str) else ""
+    hits = []
     for keyword in keywords:
-        if keyword.lower() not in body:
+        if not keyword:
             continue
-        result += f"\n#{keyword}"
-    return result
+        if keyword.lower() in body_lower:
+            hits.append(f"#{keyword}")
+    if not hits:
+        return ""
+    # Ensure one blank line before the hashtag block
+    return "\n\n" + "\n".join(hits)
 
 
 def send_notification(message, data, keywords, output_channel_pk, cover_letter: str):
@@ -528,8 +533,7 @@ def send_notification(message, data, keywords, output_channel_pk, cover_letter: 
         output_channel_pk (int): primary key of output channel
     """
     message = (
-        message.replace("url", strip_tags(data["url"]))
-        .replace("lang", data["language"].upper())
+        message.replace("lang", data["language"].upper())
         .replace("title", data["title"])
         .replace("location", data["location"])
         .replace("company", data["company"])
@@ -537,11 +541,17 @@ def send_notification(message, data, keywords, output_channel_pk, cover_letter: 
         .replace("easy_apply", data["easy_apply"])
         .replace("keywords", check_keywords(data["description"], keywords))
     )
+    # Ensure exactly one blank line before URL
+    url_text = strip_tags(data["url"]) if data.get("url") else ""
+    message = message.replace("url", f"\n\n{url_text}")
     # Only append cover letter spacing if there is a cover letter
     if cover_letter:
         message = f"{message}\n\n{cover_letter}"
-    # Normalize and collapse excessive blank lines
-    # message = collapse_newlines(message, 1)
+    # Enforce desired spacing around Region, Location and Easy Apply blocks
+    message = normalize_job_message_spacing(message)
+    # Ensure there is exactly one blank line before the url if present in template
+    # Otherwise, append link will already be defined in the template
+    message = collapse_newlines(message, 1)
     not_tasks.send_message_to_telegram_channel(
         message,
         output_channel_pk,
