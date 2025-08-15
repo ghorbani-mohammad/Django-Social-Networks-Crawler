@@ -105,3 +105,27 @@ class ExpressionSearchAdmin(ReadOnlyAdminDateFieldsMIXIN):
 @admin.register(models.IgnoringFilterCategory)
 class IgnoringFilterCategoryAdmin(ReadOnlyAdminDateFieldsMIXIN):
     list_display = ("pk", "name", "enable", "created_at")
+
+
+@admin.register(models.Job)
+class JobAdmin(ReadOnlyAdminDateFieldsMIXIN):
+    list_display = (
+        "pk",
+        "page",
+        "network_id",
+        "title",
+        "company",
+        "location",
+        "language",
+        "easy_apply",
+        "eligible",
+        "rejected_reason",
+        "job_url",
+        "created_at",
+    )
+    list_filter = ("eligible", "easy_apply", "language", "page")
+    search_fields = ("title", "company", "location", "description", "network_id")
+    readonly_fields = tuple(field.name for field in models.Job._meta.get_fields())
+
+    def job_url(self, obj: models.Job):
+        return format_html("<a href='{url}'>Link</a>", url=obj.url)
