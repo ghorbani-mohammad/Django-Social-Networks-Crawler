@@ -545,6 +545,38 @@ def send_notification(message, data, keywords, output_channel_pk, cover_letter: 
     )
 
 
+@shared_task
+def store_job(job_detail: dict, page_id: int, eligible: bool, reason: Optional[str]):
+    """Create or update a Job row for every crawled job."""
+    try:
+        job_values = {
+            "url": job_detail.get("url"),
+            "title": job_detail.get("title"),
+            "company": job_detail.get("company"),
+            "location": job_detail.get("location"),
+            "description": job_detail.get("description"),
+            "language": job_detail.get("language"),
+            "company_size": job_detail.get("company_size"),
+            "easy_apply": True if job_detail.get("easy_apply") == "✅" else False,
+            "eligible": eligible,
+            "rejected_reason": reason,
+        }
+        # include page relation
+        job_values["page_id"] = page_id
+
+        network_id = job_detail.get("network_id")
+        if network_id:
+            obj, _ = lin_models.Job.objects.update_or_create(
+                network_id=network_id, defaults=job_values
+            )
+        else:
+            obj = lin_models.Job.objects.create(**job_values)
+        return obj.pk
+    except Exception:
+        logger.error("Failed to store Job", exc_info=True)
+        return None
+
+
 def get_job_detail(driver, element) -> dict:
     """This function gets browser driver and job html content and returns some
     information like job-link, job-desc and job-language.
@@ -559,6 +591,7 @@ def get_job_detail(driver, element) -> dict:
     """
     result = {}
     result["url"] = get_job_url(element)
+    result["network_id"] = element.get_attribute("data-occludable-job-id")
     result["easy_apply"] = check_easy_apply(element)
     result["description"] = get_job_description(driver)
     result["company_size"] = get_job_company_size(driver)
@@ -671,6 +704,7 @@ def get_job_page_posts(
                 ig_filters,
                 just_easily_apply,
                 page.profile.about_me,
+                page.pk,
             )
         logger.info(
             f"found {counter} jobs in page: {page_id} with starting-job: {starting_job}"
@@ -703,6 +737,7 @@ def process_items(
     ig_filters,
     just_easily_apply: bool,
     about_profile: str,
+    page_id: int,
 ):
     counter = 0
     for item in items:
@@ -717,6 +752,7 @@ def process_items(
                 ig_filters,
                 just_easily_apply,
                 about_profile,
+                page_id,
             )
             if job_id:
                 counter += 1
@@ -740,6 +776,7 @@ def process_job_item(
     ig_filters,
     just_easily_apply: bool,
     about_profile: str,
+    page_id: int,
 ):
     driver.execute_script("arguments[0].scrollIntoView();", item)
     job_id = item.get_attribute("data-occludable-job-id")
@@ -759,6 +796,8 @@ def process_job_item(
     cover_letter = ""
 
     eligible, reason = is_eligible(ig_filters, just_easily_apply, job_detail)
+    # Persist every crawled job with decision
+    store_job.delay(job_detail, page_id, eligible, reason)
     if not eligible:
         logger.info(f"Job is not eligible, reason: {reason}")
         store_ignored_content.delay(job_detail, reason)
@@ -950,7 +989,6 @@ def find_tags_in_ignored_jobs(limit: int = 0):
         list[dict]: Each item like {"ignored_job_id": int, "tags": list[str]}.
     """
 
-    #TODO: 
     limit = 50
 
     tag_model = get_network_model("Tag")
@@ -981,5 +1019,7 @@ def find_tags_in_ignored_jobs(limit: int = 0):
             )
             results.append({"ignored_job_id": ignored_job.pk, "tags": matched})
 
-    logger.info("find_tags_in_ignored_jobs completed; %s jobs with matches", len(results))
+    logger.info(
+        "find_tags_in_ignored_jobs completed; %s jobs with matches", len(results)
+    )
     return results
