@@ -1,3 +1,12 @@
+## [1.56.1](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.56.0...v1.56.1) (2025-08-15)
+
+
+### Bug Fixes
+
+* **linkedin:** conditionally append cover letter and blank lines ([70b04d6](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/70b04d6f5ac7e9d04260291060b24eef6d24b2ca))
+
+
+
 # [1.56.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.55.0...v1.56.0) (2025-08-15)
 
 
@@ -32,15 +41,6 @@
 ### Features
 
 * **linkedin:** add strip accessablity to expression search ([e17fd85](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/e17fd85056bc0681889a1fe57d2d08e59a064f99))
-
-
-
-# [1.52.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.51.0...v1.52.0) (2025-08-10)
-
-
-### Features
-
-* **linkedin:** add collapse consequtive new-lines to expression search ([ba9aed1](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/ba9aed194deb6d766767e94789f1200e915bd16e))
 
 
 
