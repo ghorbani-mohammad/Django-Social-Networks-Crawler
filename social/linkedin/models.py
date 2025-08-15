@@ -127,3 +127,32 @@ class ExpressionSearch(BaseModel):
         related_name="linkedin_expression_searches",
     )
     ignore_categories = models.ManyToManyField(IgnoringFilterCategory, blank=True)
+
+
+class Job(BaseModel):
+    """Stores all crawled LinkedIn jobs regardless of eligibility."""
+
+    # A stable id we read from the job card, used for upserts/deduplication
+    network_id = models.CharField(max_length=100, unique=True, null=True, blank=True)
+
+    # Basic job fields
+    url = models.URLField(null=True, blank=True)
+    title = models.CharField(max_length=300, null=True, blank=True)
+    company = models.CharField(max_length=100, null=True, blank=True)
+    location = models.CharField(max_length=200, null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
+    language = models.CharField(max_length=40, null=True, blank=True)
+
+    # Extra metadata
+    company_size = models.CharField(max_length=100, null=True, blank=True)
+    easy_apply = models.BooleanField(default=False)
+
+    # Crawl context and decision
+    page = models.ForeignKey(
+        JobSearch, on_delete=models.SET_NULL, null=True, blank=True, related_name="jobs"
+    )
+    eligible = models.BooleanField(default=True)
+    rejected_reason = models.CharField(max_length=100, null=True, blank=True)
+
+    def __str__(self):
+        return f"({self.pk} - {self.title})"
