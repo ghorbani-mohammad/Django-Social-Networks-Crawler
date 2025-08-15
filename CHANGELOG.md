@@ -1,3 +1,12 @@
+# [1.56.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.55.0...v1.56.0) (2025-08-15)
+
+
+### Features
+
+* **linkedin:** add Job model and store_job task for managing crawled jobs ([2bfcc2a](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/2bfcc2ab974005b3cbe28b88f246aec29d7f95e8))
+
+
+
 # [1.55.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.54.0...v1.55.0) (2025-08-11)
 
 
@@ -32,15 +41,6 @@
 ### Features
 
 * **linkedin:** add collapse consequtive new-lines to expression search ([ba9aed1](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/ba9aed194deb6d766767e94789f1200e915bd16e))
-
-
-
-# [1.51.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.50.0...v1.51.0) (2025-08-10)
-
-
-### Features
-
-* **linkedin:** add language filter expression searchs ([a21b4df](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/a21b4df4612592ce8e9dc5f985f90efbde362a0a))
 
 
 
