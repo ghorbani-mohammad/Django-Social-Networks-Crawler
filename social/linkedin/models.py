@@ -10,7 +10,7 @@ class Keyword(BaseModel):
 
     @property
     def keywords_in_array(self):
-        return self.words.split(",")
+        return [w.strip() for w in self.words.split(",")]
 
     def __str__(self):
         return f"({self.pk} - {self.name})"
