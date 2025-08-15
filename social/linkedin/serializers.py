@@ -18,3 +18,14 @@ class IgnoredJobSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
         )
+
+
+class JobSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Job
+        fields = (
+            "id",
+            "url",
+            "title",
+            "company",
+        )
