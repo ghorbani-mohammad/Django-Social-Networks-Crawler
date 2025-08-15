@@ -1,3 +1,12 @@
+# [1.57.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.56.2...v1.57.0) (2025-08-15)
+
+
+### Features
+
+* **linkedin:** add JobViewset ([fa026f5](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/fa026f536a8fa46573e660978f048c7b7f3adb1a))
+
+
+
 ## [1.56.2](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.56.1...v1.56.2) (2025-08-15)
 
 
@@ -32,15 +41,6 @@
 
 * **linkedin:** add ignore checker to expression search ([7c1d4a2](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/7c1d4a2b939ff4afd9633a80b7de402c7cc6c3f0))
 * **linkedin:** add IgnoringFilterCategory ([8ef5409](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/8ef540943a64b16f0c06d3d0988c81e2ac2f6548))
-
-
-
-# [1.54.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.53.0...v1.54.0) (2025-08-10)
-
-
-### Features
-
-* **linkedin:** implement IgnoredJob API with permissions and serializers ([1b2e037](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/1b2e03756ec7b4421742ca26d06332bd1db99265))
 
 
 
