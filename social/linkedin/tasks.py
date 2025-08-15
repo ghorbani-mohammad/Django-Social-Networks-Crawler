@@ -541,7 +541,7 @@ def send_notification(message, data, keywords, output_channel_pk, cover_letter: 
     if cover_letter:
         message = f"{message}\n\n{cover_letter}"
     # Normalize and collapse excessive blank lines
-    message = collapse_newlines(message, 1)
+    # message = collapse_newlines(message, 1)
     not_tasks.send_message_to_telegram_channel(
         message,
         output_channel_pk,
