@@ -132,12 +132,30 @@ class JobAdmin(ReadOnlyAdminDateFieldsMIXIN):
         "easy_apply",
         "eligible",
         "rejected_reason",
+        "matched_keywords_names",
         "job_url",
         "created_at",
     )
-    list_filter = ("eligible", "easy_apply", "language", "page")
-    search_fields = ("title", "company", "location", "description", "network_id")
+    list_filter = ("eligible", "easy_apply", "language", "page", "matched_keywords")
+    search_fields = (
+        "title",
+        "company",
+        "location",
+        "description",
+        "network_id",
+        "matched_keywords__name",
+    )
     readonly_fields = tuple(field.name for field in models.Job._meta.get_fields())
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        return queryset.prefetch_related("matched_keywords")
 
     def job_url(self, obj: models.Job):
         return format_html("<a href='{url}'>Link</a>", url=obj.url)
+
+    def matched_keywords_names(self, obj: models.Job):
+        names = obj.matched_keywords.values_list("name", flat=True)
+        return ", ".join(names) if names else "-"
+
+    matched_keywords_names.short_description = "Matched Keywords"
