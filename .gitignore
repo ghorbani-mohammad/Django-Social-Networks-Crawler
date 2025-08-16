@@ -19,6 +19,7 @@ social/celerybeat-schedule
 social/celerybeat.pid
 social/static
 static
+media
 telegram_sessions/
 logs/
 todo
