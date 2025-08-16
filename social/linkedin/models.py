@@ -7,6 +7,9 @@ from reusable.models import BaseModel
 class Keyword(BaseModel):
     name = models.CharField(max_length=20)
     words = models.TextField()
+    image = models.FileField(
+        upload_to="linkedin/keyword_images/", null=True, blank=True
+    )
 
     @property
     def keywords_in_array(self):
@@ -153,6 +156,9 @@ class Job(BaseModel):
     )
     eligible = models.BooleanField(default=True)
     rejected_reason = models.CharField(max_length=100, null=True, blank=True)
+
+    # Matched keywords for this job based on content
+    matched_keywords = models.ManyToManyField(Keyword, blank=True)
 
     def __str__(self):
         return f"({self.pk} - {self.title})"

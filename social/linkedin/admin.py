@@ -71,7 +71,18 @@ class IgnoredJobAdmin(ReadOnlyAdminDateFieldsMIXIN):
 
 @admin.register(models.Keyword)
 class KeywordAdmin(ReadOnlyAdminDateFieldsMIXIN):
-    list_display = ("pk", "name", "created_at")
+    list_display = ("pk", "name", "image_preview", "created_at")
+
+    def image_preview(self, obj: models.Keyword):
+        if getattr(obj, "image", None):
+            try:
+                url = obj.image.url
+            except Exception:
+                url = None
+            if url:
+                return format_html("<img src='{}' style='height:40px' />", url)
+        return "-"
+    image_preview.short_description = "Image"
 
 
 @admin.register(models.IgnoringFilter)
