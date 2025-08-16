@@ -1,3 +1,12 @@
+# [1.58.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.57.0...v1.58.0) (2025-08-16)
+
+
+### Features
+
+* **linkedin:** add image preview to KeywordAdmin in admin panel ([8c629eb](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/8c629ebf8a7cadb8825cbc1fd55051f086b8d13e))
+
+
+
 # [1.57.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.56.2...v1.57.0) (2025-08-15)
 
 
@@ -31,16 +40,6 @@
 ### Features
 
 * **linkedin:** add Job model and store_job task for managing crawled jobs ([2bfcc2a](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/2bfcc2ab974005b3cbe28b88f246aec29d7f95e8))
-
-
-
-# [1.55.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.54.0...v1.55.0) (2025-08-11)
-
-
-### Features
-
-* **linkedin:** add ignore checker to expression search ([7c1d4a2](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/7c1d4a2b939ff4afd9633a80b7de402c7cc6c3f0))
-* **linkedin:** add IgnoringFilterCategory ([8ef5409](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/8ef540943a64b16f0c06d3d0988c81e2ac2f6548))
 
 
 
