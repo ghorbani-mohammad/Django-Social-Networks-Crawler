@@ -19,7 +19,7 @@ lint-python:
 clear-logs:
 	@mkdir -p logs
 	@: > logs/celery_error.log
-	@: > logs/celery_info
+	@: > logs/celery_info.log
 	@: > logs/all_error.log
 	@: > logs/all_info.log
 	@echo "Logs cleared"
