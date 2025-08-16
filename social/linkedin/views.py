@@ -39,4 +39,4 @@ class JobViewSet(ReadOnlyModelViewSet):
     ]
     search_fields = ["title", "company", "location", "description"]
     ordering_fields = ["created_at", "updated_at"]
-    filterset_fields = ["language", "company", "location", "reason"]
+    filterset_fields = ["language", "company", "location", "rejected_reason"]
