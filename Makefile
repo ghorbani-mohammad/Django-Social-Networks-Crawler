@@ -14,3 +14,12 @@ format-python:
 .PHONY: lint-python
 lint-python:
 	@MYPYPATH=social linters/lint-python.sh
+
+.PHONY: clear-logs
+clear-logs:
+	@mkdir -p logs
+	@: > logs/celery_error.log
+	@: > logs/celery_info
+	@: > logs/all_error.log
+	@: > logs/all_info.log
+	@echo "Logs cleared"
