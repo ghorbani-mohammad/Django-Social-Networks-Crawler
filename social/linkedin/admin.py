@@ -82,6 +82,7 @@ class KeywordAdmin(ReadOnlyAdminDateFieldsMIXIN):
             if url:
                 return format_html("<img src='{}' style='height:40px' />", url)
         return "-"
+
     image_preview.short_description = "Image"
 
 
