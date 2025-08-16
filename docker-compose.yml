@@ -10,7 +10,7 @@ services:
     shm_size: 1gb
     networks:
       - social_network
-  
+
   social_api:
     container_name: social_api
     build: .
@@ -20,6 +20,7 @@ services:
     volumes:
       - .:/app
       - ./static:/app/social/static
+      - ./media:/app/social/media
       - ./logs:/app/social/logs
     ports:
       - 127.0.0.1:8030:80
@@ -38,6 +39,7 @@ services:
     volumes:
       - .:/app
       - ./static:/app/social/static
+      - ./media:/app/social/media
       - ./logs:/app/social/logs
     depends_on:
       - social_db
