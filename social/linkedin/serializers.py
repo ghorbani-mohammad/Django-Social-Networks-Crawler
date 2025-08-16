@@ -50,5 +50,12 @@ class JobSerializer(serializers.ModelSerializer):
             if kw.image:
                 url = getattr(kw.image, "url", None)
                 if url:
+                    request = (
+                        self.context.get("request")
+                        if hasattr(self, "context")
+                        else None
+                    )
+                    if request is not None:
+                        return request.build_absolute_uri(url)
                     return url
         return None
