@@ -585,6 +585,34 @@ def store_job(job_detail: dict, page_id: int, eligible: bool, reason: Optional[s
             )
         else:
             obj = lin_models.Job.objects.create(**job_values)
+        # compute and attach matched keywords based on JobSearch.page keywords
+        try:
+            page = lin_models.JobSearch.objects.get(pk=page_id)
+            # Flatten page keywords (words CSV) into tokens
+            matched = []
+            haystack = " ".join(
+                [
+                    (job_values.get("title") or ""),
+                    (job_values.get("company") or ""),
+                    (job_values.get("location") or ""),
+                    (job_values.get("description") or ""),
+                ]
+            )
+            body_lower = haystack.lower()
+            for keyword in page.keywords.all():
+                hit = False
+                for token in keyword.keywords_in_array:
+                    if token and token.lower() in body_lower:
+                        hit = True
+                        break
+                if hit:
+                    matched.append(keyword)
+            if matched:
+                obj.matched_keywords.set(matched)
+            else:
+                obj.matched_keywords.clear()
+        except Exception:
+            logger.error("Failed to compute matched keywords", exc_info=True)
         return obj.pk
     except Exception:
         logger.error("Failed to store Job", exc_info=True)
