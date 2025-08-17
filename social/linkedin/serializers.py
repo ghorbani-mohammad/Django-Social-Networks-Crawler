@@ -44,6 +44,7 @@ class JobSerializer(serializers.ModelSerializer):
             "matched_keywords",
             "image",
             "created_at",
+            "description",
         )
 
     def get_image(self, obj: models.Job):
