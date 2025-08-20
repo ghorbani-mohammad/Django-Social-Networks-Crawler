@@ -732,33 +732,32 @@ def get_job_page_posts(
         just_easily_apply,
     ) = page.page_data
     try:
-        with initialize_linkedin_driver() as driver:
-            prepare_driver(driver, url, starting_job)
-            time.sleep(5)
-            items = driver.find_elements(By.CLASS_NAME, "scaffold-layout__list-item")
-            counter = process_items(
-                driver,
-                items,
-                ignore_repetitive,
-                message,
-                keywords,
-                output_channel,
-                ig_filters,
-                just_easily_apply,
-                page.profile.about_me,
-                page.pk,
-            )
-        logger.info(
-            f"found {counter} jobs in page: {page_id} with starting-job: {starting_job}"
+        # Remove the 'with' statement - it's not a context manager
+        driver = initialize_linkedin_driver()
+        prepare_driver(driver, url, starting_job)
+        time.sleep(5)
+        items = driver.find_elements(By.CLASS_NAME, "scaffold-layout__list-item")
+        counter = process_items(
+            driver,
+            items,
+            ignore_repetitive,
+            message,
+            keywords,
+            output_channel,
+            ig_filters,
+            just_easily_apply,
+            page.profile.about_me,
+            page.pk,
         )
-        update_job_search_last_crawl_at.delay(page_id, counter)
-        check_page_count.delay(page_id, ignore_repetitive, starting_job)
-    except Exception as error:
-        msg = f"Error in get_job_page_posts: {error}"
-        msg += f"\npage_id: {page_id}, starting_job: {starting_job}"
-        msg += f"\nignore_repetitive: {ignore_repetitive}"
-        msg = f"\n{traceback.format_exc()}"
-        logger.error(msg)
+    finally:
+        # Always ensure driver is properly closed
+        if 'driver' in locals():
+            driver_exit(driver)
+    logger.info(
+        f"found {counter} jobs in page: {page_id} with starting-job: {starting_job}"
+    )
+    update_job_search_last_crawl_at.delay(page_id, counter)
+    check_page_count.delay(page_id, ignore_repetitive, starting_job)
 
 
 def prepare_driver(driver, url, starting_job):
@@ -1068,3 +1067,19 @@ def find_tags_in_ignored_jobs(limit: int = 0):
         "find_tags_in_ignored_jobs completed; %s jobs with matches", len(results)
     )
     return results
+
+
+def validate_driver_session(driver):
+    """Check if driver session is still valid"""
+    try:
+        # Try to get current URL - this will fail if session is invalid
+        driver.current_url
+        return True
+    except Exception:
+        return False
+
+def safe_driver_operation(driver, operation, *args, **kwargs):
+    """Safely execute driver operations with session validation"""
+    if not validate_driver_session(driver):
+        raise Exception("Driver session is invalid")
+    return operation(*args, **kwargs)
