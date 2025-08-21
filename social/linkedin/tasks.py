@@ -751,7 +751,7 @@ def get_job_page_posts(
         )
     finally:
         # Always ensure driver is properly closed
-        if 'driver' in locals():
+        if "driver" in locals():
             driver_exit(driver)
     logger.info(
         f"found {counter} jobs in page: {page_id} with starting-job: {starting_job}"
@@ -1067,19 +1067,3 @@ def find_tags_in_ignored_jobs(limit: int = 0):
         "find_tags_in_ignored_jobs completed; %s jobs with matches", len(results)
     )
     return results
-
-
-def validate_driver_session(driver):
-    """Check if driver session is still valid"""
-    try:
-        # Try to get current URL - this will fail if session is invalid
-        driver.current_url
-        return True
-    except Exception:
-        return False
-
-def safe_driver_operation(driver, operation, *args, **kwargs):
-    """Safely execute driver operations with session validation"""
-    if not validate_driver_session(driver):
-        raise Exception("Driver session is invalid")
-    return operation(*args, **kwargs)
