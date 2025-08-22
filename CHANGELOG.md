@@ -1,45 +1,45 @@
-# [1.46.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.45.2...v1.46.0) (2025-07-22)
+# [1.58.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.57.0...v1.58.0) (2025-08-16)
 
 
 ### Features
 
-* **linkedin:** add actions for crawling pages in ExpressionSearchAdmin ([a730c22](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/a730c227ed343d5ff23cc3773dd45a26f64ee1cb))
+* **linkedin:** add image preview to KeywordAdmin in admin panel ([8c629eb](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/8c629ebf8a7cadb8825cbc1fd55051f086b8d13e))
 
 
 
-## [1.45.2](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.45.1...v1.45.2) (2025-07-12)
-
-
-### Bug Fixes
-
-* **linkedin:** handle case where card ID cannot be extracted in process_article function ([9266c16](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/9266c1693bdc00cc0057c4e92bf4b000258aa1aa))
-
-
-
-## [1.45.1](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.45.0...v1.45.1) (2025-07-12)
-
-
-### Bug Fixes
-
-* **docker:** uncomment ports configuration for service in docker-compose.yml ([e22e495](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/e22e495824066b588bf59a0c64744edb446eddfc))
-
-
-
-# [1.45.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.44.6...v1.45.0) (2025-07-05)
+# [1.57.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.56.2...v1.57.0) (2025-08-15)
 
 
 ### Features
 
-* **admin:** add actions for crawling job pages in JobSearchAdmin ([73e6d11](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/73e6d11e92d0d3f227df0dcb806ba577cfb2b02b))
+* **linkedin:** add JobViewset ([fa026f5](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/fa026f536a8fa46573e660978f048c7b7f3adb1a))
 
 
 
-## [1.44.6](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.44.5...v1.44.6) (2025-03-15)
+## [1.56.2](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.56.1...v1.56.2) (2025-08-15)
 
 
 ### Bug Fixes
 
-* **twitter:** update Twitter references to X and change cookie file names ([8b89056](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/8b89056e8072ec9284790b5fe71b835f1773e5d3))
+* **linkedin:** solve ignore job creation issue ([a5299d8](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/a5299d8cc6394a381e3df7c676fd98426aa608e7))
+
+
+
+## [1.56.1](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.56.0...v1.56.1) (2025-08-15)
+
+
+### Bug Fixes
+
+* **linkedin:** conditionally append cover letter and blank lines ([70b04d6](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/70b04d6f5ac7e9d04260291060b24eef6d24b2ca))
+
+
+
+# [1.56.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.55.0...v1.56.0) (2025-08-15)
+
+
+### Features
+
+* **linkedin:** add Job model and store_job task for managing crawled jobs ([2bfcc2a](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/2bfcc2ab974005b3cbe28b88f246aec29d7f95e8))
 
 
 

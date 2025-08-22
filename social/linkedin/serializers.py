@@ -48,6 +48,7 @@ class JobSerializer(serializers.ModelSerializer):
             "image",
             "created_at",
             "updated_at",
+            "description",
         )
 
     def get_image(self, obj: models.Job):
