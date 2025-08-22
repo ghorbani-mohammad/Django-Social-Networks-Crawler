@@ -1,3 +1,12 @@
+# [1.59.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.58.0...v1.59.0) (2025-08-22)
+
+
+### Features
+
+* **linkedin:** add keywords to job api ([ab44b16](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/ab44b1630553e862f8bc0cee1c5fa956ca94947b))
+
+
+
 # [1.58.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.57.0...v1.58.0) (2025-08-16)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **linkedin:** conditionally append cover letter and blank lines ([70b04d6](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/70b04d6f5ac7e9d04260291060b24eef6d24b2ca))
-
-
-
-# [1.56.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.55.0...v1.56.0) (2025-08-15)
-
-
-### Features
-
-* **linkedin:** add Job model and store_job task for managing crawled jobs ([2bfcc2a](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/2bfcc2ab974005b3cbe28b88f246aec29d7f95e8))
 
 
 
