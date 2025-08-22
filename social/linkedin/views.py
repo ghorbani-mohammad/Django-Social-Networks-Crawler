@@ -37,6 +37,19 @@ class JobViewSet(ReadOnlyModelViewSet):
         rf_filters.SearchFilter,
         rf_filters.OrderingFilter,
     ]
-    search_fields = ["title", "company", "location", "description"]
+    search_fields = [
+        "title",
+        "company",
+        "location",
+        "description",
+        "matched_keywords__name",
+        "matched_keywords__words",
+    ]
     ordering_fields = ["created_at", "updated_at"]
-    filterset_fields = ["language", "company", "location", "rejected_reason"]
+    filterset_fields = [
+        "language",
+        "company",
+        "location",
+        "rejected_reason",
+        "matched_keywords",
+    ]
