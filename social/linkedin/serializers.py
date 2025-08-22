@@ -9,6 +9,7 @@ class KeywordSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "name",
+            "words",
             "image",
         )
 
@@ -33,6 +34,7 @@ class IgnoredJobSerializer(serializers.ModelSerializer):
 class JobSerializer(serializers.ModelSerializer):
     matched_keywords = KeywordSerializer(many=True, read_only=True)
     image = serializers.SerializerMethodField()
+    keywords_as_hashtags = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Job
@@ -42,8 +44,10 @@ class JobSerializer(serializers.ModelSerializer):
             "title",
             "company",
             "matched_keywords",
+            "keywords_as_hashtags",
             "image",
             "created_at",
+            "updated_at",
             "description",
         )
 
@@ -61,3 +65,13 @@ class JobSerializer(serializers.ModelSerializer):
                         return request.build_absolute_uri(url)
                     return url
         return None
+
+    def get_keywords_as_hashtags(self, obj: models.Job):
+        """Return keywords as hashtag strings for easy frontend display."""
+        hashtags = []
+        for keyword in obj.matched_keywords.all():
+            if keyword.words:
+                # Split the words and add hashtag prefix
+                words = [w.strip() for w in keyword.words.split(",") if w.strip()]
+                hashtags.extend([f"#{word}" for word in words])
+        return hashtags
