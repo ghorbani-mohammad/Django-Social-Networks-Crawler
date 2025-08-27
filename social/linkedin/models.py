@@ -159,6 +159,9 @@ class Job(BaseModel):
 
     # Matched keywords for this job based on content
     matched_keywords = models.ManyToManyField(Keyword, blank=True)
+    
+    # Keywords actually found in the job description (comma-separated string)
+    found_keywords = models.TextField(null=True, blank=True, help_text="Keywords found in job description, comma-separated")
 
     def __str__(self):
         return f"({self.pk} - {self.title})"
