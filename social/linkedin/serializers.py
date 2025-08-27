@@ -32,7 +32,8 @@ class IgnoredJobSerializer(serializers.ModelSerializer):
 
 
 class JobSerializer(serializers.ModelSerializer):
-    matched_keywords = KeywordSerializer(many=True, read_only=True)
+    found_keywords = serializers.CharField(source="found_keywords", read_only=True)
+    found_keywords_as_hashtags = serializers.SerializerMethodField()
     image = serializers.SerializerMethodField()
     keywords_as_hashtags = serializers.SerializerMethodField()
 
@@ -43,7 +44,8 @@ class JobSerializer(serializers.ModelSerializer):
             "url",
             "title",
             "company",
-            "matched_keywords",
+            "found_keywords",
+            "found_keywords_as_hashtags",
             "keywords_as_hashtags",
             "image",
             "created_at",
@@ -52,22 +54,31 @@ class JobSerializer(serializers.ModelSerializer):
         )
 
     def get_image(self, obj: models.Job):
-        for kw in obj.matched_keywords.all():
-            if kw.image:
-                url = getattr(kw.image, "url", None)
-                if url:
-                    request = (
-                        self.context.get("request")
-                        if hasattr(self, "context")
-                        else None
-                    )
-                    if request is not None:
-                        return request.build_absolute_uri(url)
-                    return url
+        # Try to get image from found keywords first, then fall back to matched keywords
+        if obj.found_keywords:
+            # Parse found keywords to find matching keyword objects
+            found_keywords_list = [
+                kw.strip() for kw in obj.found_keywords.split(",") if kw.strip()
+            ]
+            for found_kw in found_keywords_list:
+                # Find keyword object that contains this found keyword
+                for keyword in obj.matched_keywords.all():
+                    if found_kw in keyword.keywords_in_array:
+                        if keyword.image:
+                            url = getattr(keyword.image, "url", None)
+                            if url:
+                                request = (
+                                    self.context.get("request")
+                                    if hasattr(self, "context")
+                                    else None
+                                )
+                                if request is not None:
+                                    return request.build_absolute_uri(url)
+                                return url
         return None
 
     def get_keywords_as_hashtags(self, obj: models.Job):
-        """Return keywords as hashtag strings for easy frontend display."""
+        """Return matched keywords as hashtag strings for easy frontend display."""
         hashtags = []
         for keyword in obj.matched_keywords.all():
             if keyword.words:
@@ -75,3 +86,13 @@ class JobSerializer(serializers.ModelSerializer):
                 words = [w.strip() for w in keyword.words.split(",") if w.strip()]
                 hashtags.extend([f"#{word}" for word in words])
         return hashtags
+
+    def get_found_keywords_as_hashtags(self, obj: models.Job):
+        """Return found keywords as hashtag strings for easy frontend display."""
+        if not obj.found_keywords:
+            return []
+
+        found_keywords_list = [
+            kw.strip() for kw in obj.found_keywords.split(",") if kw.strip()
+        ]
+        return [f"#{keyword}" for keyword in found_keywords_list]

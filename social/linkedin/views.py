@@ -29,7 +29,7 @@ class IgnoredJobViewSet(ReadOnlyModelViewSet):
 
 
 class JobViewSet(ReadOnlyModelViewSet):
-    queryset = Job.objects.order_by("-id").prefetch_related("matched_keywords")
+    queryset = Job.objects.order_by("-id")
     serializer_class = JobSerializer
     permission_classes = [HasPublicAPIKey]
     filter_backends = [
@@ -42,8 +42,7 @@ class JobViewSet(ReadOnlyModelViewSet):
         "company",
         "location",
         "description",
-        "matched_keywords__name",
-        "matched_keywords__words",
+        "found_keywords",
     ]
     ordering_fields = ["created_at", "updated_at"]
     filterset_fields = [
@@ -51,5 +50,4 @@ class JobViewSet(ReadOnlyModelViewSet):
         "company",
         "location",
         "rejected_reason",
-        "matched_keywords",
     ]
