@@ -613,6 +613,16 @@ def store_job(job_detail: dict, page_id: int, eligible: bool, reason: Optional[s
                 obj.matched_keywords.clear()
         except Exception:
             logger.error("Failed to compute matched keywords", exc_info=True)
+
+        # Schedule async task to search for keywords in description after 10 seconds
+        from celery import current_app
+
+        current_app.send_task(
+            "linkedin.tasks.search_keywords_in_job_description",
+            args=[obj.pk],
+            countdown=10,
+        )
+
         return obj.pk
     except Exception:
         logger.error("Failed to store Job", exc_info=True)
@@ -1067,3 +1077,57 @@ def find_tags_in_ignored_jobs(limit: int = 0):
         "find_tags_in_ignored_jobs completed; %s jobs with matches", len(results)
     )
     return results
+
+
+@shared_task
+def search_keywords_in_job_description(job_id: int):
+    """Search for keywords in job description and update found_keywords field.
+
+    This task runs asynchronously after job creation to find which keywords
+    are actually present in the job description.
+
+    Args:
+        job_id (int): ID of the job to process
+    """
+    try:
+        job = lin_models.Job.objects.get(pk=job_id)
+        if not job.description:
+            logger.info(f"Job {job_id} has no description, skipping keyword search")
+            return
+
+        # Get all keywords from the job's page
+        if not job.page:
+            logger.info(f"Job {job_id} has no associated page, skipping keyword search")
+            return
+
+        page_keywords = job.page.keywords.all()
+        if not page_keywords.exists():
+            logger.info(f"Job {job_id} page has no keywords, skipping keyword search")
+            return
+
+        # Search for keywords in description
+        description_lower = job.description.lower()
+        found_keywords = []
+
+        for keyword in page_keywords:
+            for token in keyword.keywords_in_array:
+                if token and token.lower() in description_lower:
+                    found_keywords.append(token)
+                    break  # Found one token from this keyword, move to next keyword
+
+        # Update the found_keywords field
+        if found_keywords:
+            job.found_keywords = ", ".join(found_keywords)
+            logger.info(f"Job {job_id} found keywords: {', '.join(found_keywords)}")
+        else:
+            job.found_keywords = ""
+            logger.info(f"Job {job_id} found no keywords in description")
+
+        job.save(update_fields=["found_keywords"])
+
+    except lin_models.Job.DoesNotExist:
+        logger.error(f"Job {job_id} not found for keyword search")
+    except Exception as e:
+        logger.error(
+            f"Error searching keywords for job {job_id}: {str(e)}", exc_info=True
+        )
