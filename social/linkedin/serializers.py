@@ -32,7 +32,7 @@ class IgnoredJobSerializer(serializers.ModelSerializer):
 
 
 class JobSerializer(serializers.ModelSerializer):
-    found_keywords = serializers.CharField(source="found_keywords", read_only=True)
+    found_keywords = serializers.CharField(read_only=True)
     found_keywords_as_hashtags = serializers.SerializerMethodField()
     image = serializers.SerializerMethodField()
     keywords_as_hashtags = serializers.SerializerMethodField()
