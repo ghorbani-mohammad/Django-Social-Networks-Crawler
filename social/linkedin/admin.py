@@ -159,3 +159,7 @@ class JobAdmin(ReadOnlyAdminDateFieldsMIXIN):
         return ", ".join(names) if names else "-"
 
     matched_keywords_names.short_description = "Matched Keywords"
+
+
+class IgnoredAccountAdmin(ReadOnlyAdminDateFieldsMIXIN):
+    list_display = ("pk", "account_name", "created_at")
