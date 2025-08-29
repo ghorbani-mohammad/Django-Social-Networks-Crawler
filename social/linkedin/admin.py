@@ -161,5 +161,6 @@ class JobAdmin(ReadOnlyAdminDateFieldsMIXIN):
     matched_keywords_names.short_description = "Matched Keywords"
 
 
+@admin.register(models.IgnoredAccount)
 class IgnoredAccountAdmin(ReadOnlyAdminDateFieldsMIXIN):
     list_display = ("pk", "account_name", "created_at")
