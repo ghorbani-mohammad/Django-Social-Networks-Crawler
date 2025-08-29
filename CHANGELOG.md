@@ -1,3 +1,12 @@
+# [1.61.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.60.0...v1.61.0) (2025-08-29)
+
+
+### Features
+
+* **linkedin:** add IgnoredAccount model and related functionality for filtering ignored accounts ([070fe9b](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/070fe9bfa8e8f1ccf7b14118bcf54904f0a157a3))
+
+
+
 # [1.60.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.59.0...v1.60.0) (2025-08-27)
 
 
@@ -32,15 +41,6 @@
 ### Features
 
 * **linkedin:** add JobViewset ([fa026f5](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/fa026f536a8fa46573e660978f048c7b7f3adb1a))
-
-
-
-## [1.56.2](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.56.1...v1.56.2) (2025-08-15)
-
-
-### Bug Fixes
-
-* **linkedin:** solve ignore job creation issue ([a5299d8](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/a5299d8cc6394a381e3df7c676fd98426aa608e7))
 
 
 
