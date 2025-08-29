@@ -842,6 +842,16 @@ def process_job_item(
     # WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.CLASS_NAME, "job-detail")))
     job_detail = get_job_detail(driver, item)
 
+    # Check if company is in ignored accounts for this job search
+    company = job_detail.get("company", "")
+    if company and company != "Cannot-extract-company":
+        page = lin_models.JobSearch.objects.get(pk=page_id)
+        if is_poster_in_ignored_accounts(company, page=page):
+            logger.info(f"Skipping job {job_id} due to ignored company: {company}")
+            # Store as ignored content with reason
+            store_ignored_content.delay(job_detail, "ignored_company")
+            return None
+
     # cover_letter = get_cover_letter(about_profile, job_detail["description"])
     # logger.info(f"cover_letter: {cover_letter}")
     cover_letter = ""
@@ -909,6 +919,17 @@ def process_articles(driver, articles, ignore_repetitive, expr):
     return counter
 
 
+def get_poster(article) -> Optional[str]:
+    # return the text of first elemnent which has
+    # update-components-actor__single-line-truncate
+    try:
+        return article.find_element(
+            By.CLASS_NAME, "update-components-actor__single-line-truncate"
+        ).text
+    except NoSuchElementException:
+        return None
+
+
 def process_article(driver, article, ignore_repetitive, expr):
     driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", article)
     try:
@@ -937,6 +958,15 @@ def process_article(driver, article, ignore_repetitive, expr):
     except TimeoutException:
         pass
     post_id = get_card_id(article)
+    poster = get_poster(article)
+    if poster:
+        logger.info(f"Poster id *********: {poster}")
+
+        # Check if poster is in ignored accounts for this expression search
+        if is_poster_in_ignored_accounts(poster, expr=expr):
+            logger.info(f"Skipping post {post_id} due to ignored poster: {poster}")
+            return False
+
     if post_id == "Cannot-extract-card-id":
         logger.info("Cannot extract card id")
         return False
@@ -1131,3 +1161,57 @@ def search_keywords_in_job_description(job_id: int):
         logger.error(
             f"Error searching keywords for job {job_id}: {str(e)}", exc_info=True
         )
+
+
+def is_poster_in_ignored_accounts(poster: str, expr=None, page=None) -> bool:
+    """
+    Check if the poster is in any IgnoredAccount for the given job search or expression search.
+
+    Args:
+        poster (str): The poster name to check
+        expr (ExpressionSearch, optional): The expression search object
+        page (JobSearch, optional): The job search object
+
+    Returns:
+        bool: True if poster is in ignored accounts, False otherwise
+    """
+    if not poster:
+        return False
+
+    # Get all IgnoredAccount objects that are related to this search
+    ignored_accounts = lin_models.IgnoredAccount.objects.none()
+
+    if expr:
+        # For expression search, get accounts related to this expression
+        ignored_accounts = lin_models.IgnoredAccount.objects.filter(
+            expression_search=expr
+        )
+    elif page:
+        # For job search, get accounts related to this job search
+        ignored_accounts = lin_models.IgnoredAccount.objects.filter(job_search=page)
+
+    if not ignored_accounts.exists():
+        return False
+
+    # Check if any of the ignored account names contain the poster
+    poster_lower = poster.lower()
+    for ignored_account in ignored_accounts:
+        if (
+            ignored_account.account_name
+            and ignored_account.account_name.lower() in poster_lower
+        ):
+            logger.info(
+                f"Poster '{poster}' matches ignored account: {ignored_account.account_name}"
+            )
+            return True
+        # Also check if poster contains the ignored account name (for partial matches)
+        if (
+            ignored_account.account_name
+            and poster_lower in ignored_account.account_name.lower()
+        ):
+            logger.info(
+                f"Poster '{poster}' matches ignored account: {ignored_account.account_name}"
+            )
+            return True
+
+    return False

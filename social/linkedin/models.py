@@ -169,3 +169,12 @@ class Job(BaseModel):
 
     def __str__(self):
         return f"({self.pk} - {self.title})"
+
+
+class IgnoredAccount(BaseModel):
+    job_search = models.ManyToManyField(JobSearch, blank=True)
+    expression_search = models.ManyToManyField(ExpressionSearch, blank=True)
+    account_name = models.CharField(max_length=100, null=True, blank=True)
+
+    def __str__(self):
+        return f"({self.pk} - {self.account_name})"
