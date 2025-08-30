@@ -91,5 +91,24 @@ services:
       - VNC_PASSWORD=${VNC_PASSWORD}
       - VNC_NO_PASSWORD=0
 
+  social_websocket:
+    container_name: social_websocket
+    build: ./nodejs
+    restart: unless-stopped
+    depends_on:
+      - social_db
+    volumes:
+      - ./nodejs:/app
+      - /app/node_modules
+    ports:
+      - "127.0.0.1:8031:3000"
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@social_db:5432/${POSTGRES_DB}
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:3000}
+    networks:
+      - social_network
+
 networks:
   social_network:
