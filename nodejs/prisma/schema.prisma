@@ -20,6 +20,9 @@ model User {
   // WebSocket connections
   connections Connection[]
   
+  // Jobs
+  jobs Job[]
+  
   @@map("users")
 }
 
