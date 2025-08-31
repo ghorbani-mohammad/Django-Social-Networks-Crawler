@@ -101,7 +101,7 @@ services:
       - ./nodejs:/app
       - /app/node_modules
     ports:
-      - "127.0.0.1:8031:3000"
+      - "127.0.0.1:8032:3000"
     env_file:
       - .env
     environment:
