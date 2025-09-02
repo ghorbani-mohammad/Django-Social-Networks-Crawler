@@ -8,6 +8,7 @@ const morgan = require('morgan');
 require('dotenv').config();
 
 const { PrismaClient } = require('@prisma/client');
+const logger = require('./logger');
 
 const app = express();
 const httpServer = createServer(app);
@@ -25,7 +26,7 @@ const prisma = new PrismaClient();
 // Middleware
 app.use(helmet());
 app.use(compression());
-app.use(morgan('combined'));
+app.use(morgan('combined', { stream: logger.stream }));
 app.use(cors({
   origin: process.env.FRONTEND_URL || 'http://localhost:3000',
   credentials: true
@@ -34,12 +35,13 @@ app.use(express.json());
 
 // Health check endpoint
 app.get('/health', (req, res) => {
+  logger.info('Health check requested');
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
 // WebSocket connection handling
 io.on('connection', async (socket) => {
-  console.log(`Client connected: ${socket.id}`);
+  logger.info(`Client connected: ${socket.id}`);
 
   // Handle user authentication
   socket.on('authenticate', async (data) => {
@@ -64,9 +66,9 @@ io.on('connection', async (socket) => {
       socket.join(`user_${userId}`);
       socket.emit('authenticated', { message: 'Successfully authenticated' });
       
-      console.log(`User ${userId} authenticated with socket ${socket.id}`);
+      logger.info(`User ${userId} authenticated with socket ${socket.id}`);
     } catch (error) {
-      console.error('Authentication error:', error);
+      logger.error('Authentication error:', error);
       socket.emit('error', { message: 'Authentication failed' });
     }
   });
@@ -89,9 +91,9 @@ io.on('connection', async (socket) => {
         timestamp: new Date().toISOString()
       });
 
-      console.log(`Job ${jobId} status updated to ${status} for user ${userId}`);
+      logger.info(`Job ${jobId} status updated to ${status} for user ${userId}`);
     } catch (error) {
-      console.error('Job update error:', error);
+      logger.error('Job update error:', error);
       socket.emit('error', { message: 'Failed to update job status' });
     }
   });
@@ -105,9 +107,9 @@ io.on('connection', async (socket) => {
         data: { isActive: false }
       });
 
-      console.log(`Client disconnected: ${socket.id}`);
+      logger.info(`Client disconnected: ${socket.id}`);
     } catch (error) {
-      console.error('Disconnection error:', error);
+      logger.error('Disconnection error:', error);
     }
   });
 });
@@ -131,9 +133,10 @@ app.post('/api/jobs', async (req, res) => {
       timestamp: new Date().toISOString()
     });
 
+    logger.info(`New job created: ${job.id} for user ${userId}`);
     res.json(job);
   } catch (error) {
-    console.error('Create job error:', error);
+    logger.error('Create job error:', error);
     res.status(500).json({ error: 'Failed to create job' });
   }
 });
@@ -147,28 +150,29 @@ app.get('/api/jobs/:userId', async (req, res) => {
       orderBy: { createdAt: 'desc' }
     });
 
+    logger.info(`Jobs retrieved for user ${userId}: ${jobs.length} jobs`);
     res.json(jobs);
   } catch (error) {
-    console.error('Get jobs error:', error);
+    logger.error('Get jobs error:', error);
     res.status(500).json({ error: 'Failed to get jobs' });
   }
 });
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack);
+  logger.error('Unhandled error:', err);
   res.status(500).json({ error: 'Something went wrong!' });
 });
 
 // Graceful shutdown
 process.on('SIGTERM', async () => {
-  console.log('SIGTERM received, shutting down gracefully');
+  logger.info('SIGTERM received, shutting down gracefully');
   await prisma.$disconnect();
   process.exit(0);
 });
 
 process.on('SIGINT', async () => {
-  console.log('SIGINT received, shutting down gracefully');
+  logger.info('SIGINT received, shutting down gracefully');
   await prisma.$disconnect();
   process.exit(0);
 });
@@ -176,5 +180,5 @@ process.on('SIGINT', async () => {
 const PORT = process.env.PORT || 3000;
 
 httpServer.listen(PORT, () => {
-  console.log(`WebSocket service running on port ${PORT}`);
+  logger.info(`WebSocket service started successfully on port ${PORT}`);
 });

@@ -31,6 +31,9 @@ COPY --from=builder /app/src ./src
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/package.json ./package.json
 
+# Create logs directory
+RUN mkdir -p /app/src/logs
+
 EXPOSE 3000
 
 ENV PORT 3000
