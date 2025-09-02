@@ -993,7 +993,11 @@ def process_article(driver, article, ignore_repetitive, expr):
                     return False
     except Exception:
         logger.error("Error checking ignored keywords", exc_info=True)
-    body = f"{expr.name}\n\n{body}"
+    # Add poster to body if available
+    if poster:
+        body = f"{expr.name}\n\nPosted by: {poster}\n\n{body}"
+    else:
+        body = f"{expr.name}\n\n{body}"
     # Ignore articles that are not in English or Persian
     language = get_language(body)
     if language not in ("en", "fa"):
