@@ -1,3 +1,12 @@
+## [1.63.3](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.63.2...v1.63.3) (2025-09-02)
+
+
+### Bug Fixes
+
+* **server:** replace Socket.IO with WebSocket for improved connection handling ([1d55d00](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/1d55d00a30805f32027a6c06d603f5be05012e2b))
+
+
+
 ## [1.63.2](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.63.1...v1.63.2) (2025-09-02)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * **nodejs:** add WebSocket microservice for real-time job notifications with Prisma integration ([411e057](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/411e05762b8e80460333f6f0087a1b47d2c79a1a))
-
-
-
-# [1.61.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.60.0...v1.61.0) (2025-08-29)
-
-
-### Features
-
-* **linkedin:** add IgnoredAccount model and related functionality for filtering ignored accounts ([070fe9b](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/070fe9bfa8e8f1ccf7b14118bcf54904f0a157a3))
 
 
 
