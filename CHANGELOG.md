@@ -1,3 +1,12 @@
+## [1.63.1](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.63.0...v1.63.1) (2025-09-02)
+
+
+### Bug Fixes
+
+* **linkedin:** update article body formatting to use HTML line breaks for poster information ([22606dc](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/22606dc6bf38077465926520c65691ca3cd7dbf6))
+
+
+
 # [1.63.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.62.0...v1.63.0) (2025-09-02)
 
 
@@ -32,15 +41,6 @@
 
 * **linkedin:** add found_keywords field to Job model ([9c13a4b](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/9c13a4be4140297d5cd8683ee62d243d38bd12e0))
 * **linkedin:** implement asynchronous keyword search in job description ([544f1b1](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/544f1b122ba63a928dd3e90eb0fb300d738cec5d))
-
-
-
-# [1.59.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.58.0...v1.59.0) (2025-08-22)
-
-
-### Features
-
-* **linkedin:** add keywords to job api ([ab44b16](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/ab44b1630553e862f8bc0cee1c5fa956ca94947b))
 
 
 
