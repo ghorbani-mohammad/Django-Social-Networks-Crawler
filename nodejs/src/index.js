@@ -103,14 +103,19 @@ wss.on('connection', async (ws, request) => {
             return;
           }
 
-          // Store connection in database
-          await prisma.connection.create({
-            data: {
-              userId,
-              socketId: connectionId,
-              isActive: true
-            }
-          });
+          // Store connection in database (simple tracking)
+          try {
+            await prisma.webSocketConnection.create({
+              data: {
+                user_id: userId,
+                socket_id: connectionId,
+                is_active: true
+              }
+            });
+          } catch (error) {
+            // If table doesn't exist, just continue without DB storage
+            logger.warn('WebSocket connection table not found, continuing without DB storage');
+          }
 
           // Update connection info
           connections.set(connectionId, { ws, userId });
@@ -120,30 +125,11 @@ wss.on('connection', async (ws, request) => {
           break;
 
         case 'job_update':
-          const { jobId, status, userId: updateUserId } = data;
-          
-          // Update job status in database
-          await prisma.job.update({
-            where: { id: jobId },
-            data: { status }
-          });
-
-          // Notify all connections of the user about the job update
-          const message = {
-            type: 'job_status_changed',
-            jobId,
-            status,
-            timestamp: new Date().toISOString()
-          };
-
-          // Send to all connections for this user
-          connections.forEach((conn, id) => {
-            if (conn.userId === updateUserId && conn.ws.readyState === 1) {
-              conn.ws.send(JSON.stringify(message));
-            }
-          });
-
-          logger.info(`Job ${jobId} status updated to ${status} for user ${updateUserId}`);
+          // For now, we're only reading from Django DB, not updating
+          ws.send(JSON.stringify({ 
+            type: 'error', 
+            message: 'Job updates not supported in read-only mode' 
+          }));
           break;
 
         default:
@@ -158,10 +144,15 @@ wss.on('connection', async (ws, request) => {
   ws.on('close', async () => {
     try {
       // Mark connection as inactive in database
-      await prisma.connection.updateMany({
-        where: { socketId: connectionId },
-        data: { isActive: false }
-      });
+      try {
+        await prisma.webSocketConnection.updateMany({
+          where: { socket_id: connectionId },
+          data: { is_active: false }
+        });
+      } catch (error) {
+        // If table doesn't exist, just continue
+        logger.warn('WebSocket connection table not found for cleanup');
+      }
 
       connections.delete(connectionId);
       logger.info(`Client disconnected: ${connectionId}`);
@@ -175,18 +166,14 @@ wss.on('connection', async (ws, request) => {
   });
 });
 
-// API endpoints for job management
-app.post('/api/jobs', async (req, res) => {
+// API endpoint for job notifications (called from Django)
+app.post('/api/notify-job', async (req, res) => {
   try {
-    const { title, description, userId } = req.body;
+    const { userId, job } = req.body;
     
-    const job = await prisma.job.create({
-      data: {
-        title,
-        description,
-        userId
-      }
-    });
+    if (!userId || !job) {
+      return res.status(400).json({ error: 'userId and job data are required' });
+    }
 
     // Notify user about new job
     const message = {
@@ -196,30 +183,38 @@ app.post('/api/jobs', async (req, res) => {
     };
 
     // Send to all connections for this user
+    let notificationsSent = 0;
     connections.forEach((conn, id) => {
       if (conn.userId === userId && conn.ws.readyState === 1) {
         conn.ws.send(JSON.stringify(message));
+        notificationsSent++;
       }
     });
 
-    logger.info(`New job created: ${job.id} for user ${userId}`);
-    res.json(job);
+    logger.info(`Job notification sent to ${notificationsSent} connections for user ${userId}: ${job.title}`);
+    res.json({ success: true, notificationsSent });
   } catch (error) {
-    logger.error('Create job error:', error);
-    res.status(500).json({ error: 'Failed to create job' });
+    logger.error('Job notification error:', error);
+    res.status(500).json({ error: 'Failed to send job notification' });
   }
 });
 
+// Get recent jobs from Django database
 app.get('/api/jobs/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
     
-    const jobs = await prisma.job.findMany({
-      where: { userId },
-      orderBy: { createdAt: 'desc' }
+    // Read from existing Django LinkedIn jobs table
+    const jobs = await prisma.linkedinJob.findMany({
+      where: { 
+        eligible: true,
+        // You can add more filters here based on your needs
+      },
+      orderBy: { created_at: 'desc' },
+      take: 50 // Limit to recent 50 jobs
     });
 
-    logger.info(`Jobs retrieved for user ${userId}: ${jobs.length} jobs`);
+    logger.info(`Recent jobs retrieved: ${jobs.length} jobs`);
     res.json(jobs);
   } catch (error) {
     logger.error('Get jobs error:', error);
