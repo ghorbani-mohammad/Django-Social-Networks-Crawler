@@ -920,12 +920,36 @@ def process_articles(driver, articles, ignore_repetitive, expr):
 
 
 def get_poster(article) -> Optional[str]:
-    # return the text of first elemnent which has
-    # update-components-actor__single-line-truncate
+    """Extract the poster name from the article, avoiding duplication."""
     try:
-        return article.find_element(
+        # Find the actor element
+        actor_element = article.find_element(
             By.CLASS_NAME, "update-components-actor__single-line-truncate"
-        ).text
+        )
+
+        # Try to get text from aria-hidden span first (usually the main text)
+        try:
+            aria_hidden_span = actor_element.find_element(
+                By.XPATH, './/span[@aria-hidden="true"]'
+            )
+            poster_text = aria_hidden_span.text.strip()
+            if poster_text:
+                return poster_text
+        except NoSuchElementException:
+            pass
+
+        # Fallback to the main element text, but clean it up
+        poster_text = actor_element.text.strip()
+        if poster_text:
+            # Remove any duplicate text by taking only the first occurrence
+            # Split by common separators and take the first non-empty part
+            parts = poster_text.split("\n")
+            for part in parts:
+                cleaned_part = part.strip()
+                if cleaned_part:
+                    return cleaned_part
+
+        return None
     except NoSuchElementException:
         return None
 
@@ -960,8 +984,6 @@ def process_article(driver, article, ignore_repetitive, expr):
     post_id = get_card_id(article)
     poster = get_poster(article)
     if poster:
-        logger.info(f"Poster id *********: {poster}")
-
         # Check if poster is in ignored accounts for this expression search
         if is_poster_in_ignored_accounts(poster, expr=expr):
             logger.info(f"Skipping post {post_id} due to ignored poster: {poster}")
