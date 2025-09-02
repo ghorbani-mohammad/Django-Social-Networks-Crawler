@@ -1,3 +1,12 @@
+# [1.63.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.62.0...v1.63.0) (2025-09-02)
+
+
+### Features
+
+* **linkedin:** include poster information in article body if available ([83ac658](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/83ac658bb82630c15b073201905e45802f70f70b))
+
+
+
 # [1.62.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.61.0...v1.62.0) (2025-08-30)
 
 
@@ -32,15 +41,6 @@
 ### Features
 
 * **linkedin:** add keywords to job api ([ab44b16](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/ab44b1630553e862f8bc0cee1c5fa956ca94947b))
-
-
-
-# [1.58.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.57.0...v1.58.0) (2025-08-16)
-
-
-### Features
-
-* **linkedin:** add image preview to KeywordAdmin in admin panel ([8c629eb](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/8c629ebf8a7cadb8825cbc1fd55051f086b8d13e))
 
 
 
