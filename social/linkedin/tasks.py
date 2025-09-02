@@ -993,11 +993,6 @@ def process_article(driver, article, ignore_repetitive, expr):
                     return False
     except Exception:
         logger.error("Error checking ignored keywords", exc_info=True)
-    # Add poster to body if available
-    if poster:
-        body = f"{expr.name}\n\nPosted by: {poster}\n\n{body}"
-    else:
-        body = f"{expr.name}\n\n{body}"
     # Ignore articles that are not in English or Persian
     language = get_language(body)
     if language not in ("en", "fa"):
@@ -1005,8 +1000,13 @@ def process_article(driver, article, ignore_repetitive, expr):
             f"Skipping post {post_id} due to non-supported language: {language}"
         )
         return False
-    link = f"https://www.linkedin.com/feed/update/{post_id}/"
     body = limit_words(body, 50)
+    # Add poster to body if available
+    if poster:
+        body = f"{expr.name}\n\nPosted by: {poster}\n\n{body}"
+    else:
+        body = f"{expr.name}\n\n{body}"
+    link = f"https://www.linkedin.com/feed/update/{post_id}/"
     message = f"{body}\n\n{html_link(link, link)}"
     time.sleep(2)  # Delay between sending each message
     not_tasks.send_message_to_telegram_channel(
