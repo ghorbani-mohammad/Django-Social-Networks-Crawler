@@ -1,3 +1,12 @@
+## [1.63.2](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.63.1...v1.63.2) (2025-09-02)
+
+
+### Bug Fixes
+
+* **linkedin:** enhance poster extraction logic to avoid duplication and improve fallback handling ([2b11d87](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/2b11d87d36c1dabf276091c96f64e9cc1509c0e7))
+
+
+
 ## [1.63.1](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.63.0...v1.63.1) (2025-09-02)
 
 
@@ -31,16 +40,6 @@
 ### Features
 
 * **linkedin:** add IgnoredAccount model and related functionality for filtering ignored accounts ([070fe9b](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/070fe9bfa8e8f1ccf7b14118bcf54904f0a157a3))
-
-
-
-# [1.60.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.59.0...v1.60.0) (2025-08-27)
-
-
-### Features
-
-* **linkedin:** add found_keywords field to Job model ([9c13a4b](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/9c13a4be4140297d5cd8683ee62d243d38bd12e0))
-* **linkedin:** implement asynchronous keyword search in job description ([544f1b1](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/544f1b122ba63a928dd3e90eb0fb300d738cec5d))
 
 
 
