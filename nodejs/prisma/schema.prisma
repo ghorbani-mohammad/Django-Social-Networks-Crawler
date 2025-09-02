@@ -10,52 +10,36 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+// Map to existing Django tables
+model LinkedinJob {
+  id              Int      @id @default(autoincrement())
+  network_id      String?  @unique
+  url             String?
+  title           String?
+  company         String?
+  location        String?
+  description     String?
+  language        String?
+  company_size    String?
+  easy_apply      Boolean  @default(false)
+  eligible        Boolean  @default(true)
+  rejected_reason String?
+  page_id         Int?
+  found_keywords  String?
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
   
-  // WebSocket connections
-  connections Connection[]
-  
-  // Jobs
-  jobs Job[]
-  
-  @@map("users")
+  @@map("linkedin_job")
 }
 
-model Connection {
-  id        String   @id @default(cuid())
-  userId    String
-  socketId  String   @unique
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+// Simple connection tracking (we'll create this small table)
+model WebSocketConnection {
+  id        Int      @id @default(autoincrement())
+  user_id   String
+  socket_id String   @unique
+  is_active Boolean  @default(true)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
   
-  user User @relation(fields: [userId], references: [id])
-  
-  @@map("connections")
-}
-
-model Job {
-  id          String   @id @default(cuid())
-  title       String
-  description String?
-  status      JobStatus @default(PENDING)
-  userId      String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
-  user User @relation(fields: [userId], references: [id])
-  
-  @@map("jobs")
-}
-
-enum JobStatus {
-  PENDING
-  IN_PROGRESS
-  COMPLETED
-  FAILED
+  @@map("websocket_connections")
 }
