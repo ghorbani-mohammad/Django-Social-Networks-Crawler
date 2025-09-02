@@ -1,6 +1,6 @@
 const express = require('express');
 const { createServer } = require('http');
-const { Server } = require('socket.io');
+const { WebSocketServer } = require('ws');
 const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
@@ -12,13 +12,24 @@ const logger = require('./logger');
 
 const app = express();
 const httpServer = createServer(app);
-const io = new Server(httpServer, {
-  cors: {
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
-    methods: ['GET', 'POST'],
-    credentials: true
-  }
+
+// Create WebSocket server
+const wss = new WebSocketServer({ 
+  server: httpServer
 });
+
+// Add WebSocket server error handling
+wss.on('error', (error) => {
+  logger.error('WebSocket Server error:', error);
+});
+
+// Log all incoming HTTP upgrade requests
+httpServer.on('upgrade', (request, socket, head) => {
+  logger.info(`WebSocket upgrade request: ${request.method} ${request.url}`);
+  logger.info(`Headers: ${JSON.stringify(request.headers)}`);
+});
+
+logger.info('WebSocket server initialized with path: /ws/');
 
 const prisma = new PrismaClient();
 
@@ -27,10 +38,24 @@ app.use(helmet());
 app.use(compression());
 app.use(morgan('combined', { stream: logger.stream }));
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: 'https://social.m-gh.com',
   credentials: true
 }));
 app.use(express.json());
+
+// Add comprehensive request logging middleware
+app.use((req, res, next) => {
+  logger.info(`Incoming request: ${req.method} ${req.url} - Headers: ${JSON.stringify(req.headers)}`);
+  next();
+});
+
+// Add a catch-all route to log unhandled requests
+app.use('*', (req, res, next) => {
+  if (req.url.includes('socket.io')) {
+    logger.info(`Socket.IO request detected: ${req.method} ${req.url}`);
+  }
+  next();
+});
 
 // Health check endpoint
 app.get('/health', (req, res) => {
@@ -38,78 +63,105 @@ app.get('/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
+// WebSocket test endpoint
+app.get('/ws/test', (req, res) => {
+  logger.info('WebSocket test endpoint requested');
+  res.json({ message: 'WebSocket server is running', path: '/ws/' });
+});
+
+// Store active connections
+const connections = new Map();
+
 // WebSocket connection handling
-io.on('connection', async (socket) => {
-  logger.info(`Client connected: ${socket.id}`);
+wss.on('connection', async (ws, request) => {
+  const connectionId = Math.random().toString(36).substr(2, 9);
+  connections.set(connectionId, { ws, userId: null });
+  
+  logger.info(`Client connected: ${connectionId}`);
 
-  // Handle user authentication
-  socket.on('authenticate', async (data) => {
+  ws.on('message', async (message) => {
     try {
-      const { userId } = data;
-      
-      if (!userId) {
-        socket.emit('error', { message: 'User ID is required' });
-        return;
+      const data = JSON.parse(message.toString());
+      logger.info(`Received message: ${JSON.stringify(data)}`);
+
+      switch (data.type) {
+        case 'authenticate':
+          const { userId } = data;
+          
+          if (!userId) {
+            ws.send(JSON.stringify({ type: 'error', message: 'User ID is required' }));
+            return;
+          }
+
+          // Store connection in database
+          await prisma.connection.create({
+            data: {
+              userId,
+              socketId: connectionId,
+              isActive: true
+            }
+          });
+
+          // Update connection info
+          connections.set(connectionId, { ws, userId });
+          
+          ws.send(JSON.stringify({ type: 'authenticated', message: 'Successfully authenticated' }));
+          logger.info(`User ${userId} authenticated with connection ${connectionId}`);
+          break;
+
+        case 'job_update':
+          const { jobId, status, userId: updateUserId } = data;
+          
+          // Update job status in database
+          await prisma.job.update({
+            where: { id: jobId },
+            data: { status }
+          });
+
+          // Notify all connections of the user about the job update
+          const message = {
+            type: 'job_status_changed',
+            jobId,
+            status,
+            timestamp: new Date().toISOString()
+          };
+
+          // Send to all connections for this user
+          connections.forEach((conn, id) => {
+            if (conn.userId === updateUserId && conn.ws.readyState === 1) {
+              conn.ws.send(JSON.stringify(message));
+            }
+          });
+
+          logger.info(`Job ${jobId} status updated to ${status} for user ${updateUserId}`);
+          break;
+
+        default:
+          ws.send(JSON.stringify({ type: 'error', message: 'Unknown message type' }));
       }
-
-      // Store connection in database
-      await prisma.connection.create({
-        data: {
-          userId,
-          socketId: socket.id,
-          isActive: true
-        }
-      });
-
-      // Join user-specific room
-      socket.join(`user_${userId}`);
-      socket.emit('authenticated', { message: 'Successfully authenticated' });
-      
-      logger.info(`User ${userId} authenticated with socket ${socket.id}`);
     } catch (error) {
-      logger.error('Authentication error:', error);
-      socket.emit('error', { message: 'Authentication failed' });
+      logger.error('Message handling error:', error);
+      ws.send(JSON.stringify({ type: 'error', message: 'Invalid message format' }));
     }
   });
 
-  // Handle job status updates
-  socket.on('job_update', async (data) => {
-    try {
-      const { jobId, status, userId } = data;
-      
-      // Update job status in database
-      await prisma.job.update({
-        where: { id: jobId },
-        data: { status }
-      });
-
-      // Notify all connections of the user about the job update
-      io.to(`user_${userId}`).emit('job_status_changed', {
-        jobId,
-        status,
-        timestamp: new Date().toISOString()
-      });
-
-      logger.info(`Job ${jobId} status updated to ${status} for user ${userId}`);
-    } catch (error) {
-      logger.error('Job update error:', error);
-      socket.emit('error', { message: 'Failed to update job status' });
-    }
-  });
-
-  // Handle disconnection
-  socket.on('disconnect', async () => {
+  ws.on('close', async () => {
     try {
       // Mark connection as inactive in database
       await prisma.connection.updateMany({
-        where: { socketId: socket.id },
+        where: { socketId: connectionId },
         data: { isActive: false }
       });
 
-      logger.info(`Client disconnected: ${socket.id}`);
+      connections.delete(connectionId);
+      logger.info(`Client disconnected: ${connectionId}`);
     } catch (error) {
       logger.error('Disconnection error:', error);
     }
+  });
+
+  ws.on('error', (error) => {
+    logger.error('WebSocket error:', error);
   });
 });
 
@@ -127,9 +179,17 @@ app.post('/api/jobs', async (req, res) => {
     });
 
     // Notify user about new job
-    io.to(`user_${userId}`).emit('new_job', {
+    const message = {
+      type: 'new_job',
       job,
       timestamp: new Date().toISOString()
+    };
+
+    // Send to all connections for this user
+    connections.forEach((conn, id) => {
+      if (conn.userId === userId && conn.ws.readyState === 1) {
+        conn.ws.send(JSON.stringify(message));
+      }
     });
 
     logger.info(`New job created: ${job.id} for user ${userId}`);
