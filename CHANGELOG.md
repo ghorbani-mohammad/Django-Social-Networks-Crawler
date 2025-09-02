@@ -1,3 +1,12 @@
+## [1.63.4](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.63.3...v1.63.4) (2025-09-02)
+
+
+### Bug Fixes
+
+* **linkedin:** update WebSocket notification URL for job notifications ([3922f72](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/3922f72d7daad035d3f9558d6c76af867ba2f739))
+
+
+
 ## [1.63.3](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.63.2...v1.63.3) (2025-09-02)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * **linkedin:** include poster information in article body if available ([83ac658](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/83ac658bb82630c15b073201905e45802f70f70b))
-
-
-
-# [1.62.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.61.0...v1.62.0) (2025-08-30)
-
-
-### Features
-
-* **nodejs:** add WebSocket microservice for real-time job notifications with Prisma integration ([411e057](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/411e05762b8e80460333f6f0087a1b47d2c79a1a))
 
 
 
