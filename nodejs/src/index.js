@@ -169,9 +169,11 @@ wss.on('connection', async (ws, request) => {
 // API endpoint for job notifications (called from Django)
 app.post('/api/notify-job', async (req, res) => {
   try {
+    logger.info(`Job notification payload: ${JSON.stringify(req.body)}`);
     const { userId, job } = req.body;
     
     if (!userId || !job) {
+      logger.error(`Missing required fields: userId=${userId}, job=${!!job}`);
       return res.status(400).json({ error: 'userId and job data are required' });
     }
 
