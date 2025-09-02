@@ -48,7 +48,7 @@ def send_websocket_notification(user_id: str, job_data: dict):
     import requests
 
     try:
-        websocket_url = "http://social_websocket:3000/api/jobs"
+        websocket_url = "http://social_websocket:3000/api/notify-job"
         payload = {
             "title": job_data.get("title", "New Job"),
             "description": job_data.get("description", ""),
