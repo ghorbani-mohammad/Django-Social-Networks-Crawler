@@ -10,6 +10,9 @@ require('dotenv').config();
 const { PrismaClient } = require('@prisma/client');
 const logger = require('./logger');
 
+// Get PUBLIC_API_KEY from environment
+const PUBLIC_API_KEY = process.env.PUBLIC_API_KEY;
+
 const app = express();
 const httpServer = createServer(app);
 
@@ -86,10 +89,17 @@ wss.on('connection', async (ws, request) => {
 
       switch (data.type) {
         case 'authenticate':
-          const { userId } = data;
+          const { userId, apiKey } = data;
           
-          if (!userId) {
-            ws.send(JSON.stringify({ type: 'error', message: 'User ID is required' }));
+          if (!userId || !apiKey) {
+            ws.send(JSON.stringify({ type: 'error', message: 'User ID and API key are required' }));
+            return;
+          }
+
+          // Validate API key
+          if (apiKey !== PUBLIC_API_KEY) {
+            ws.send(JSON.stringify({ type: 'error', message: 'Invalid API key' }));
+            logger.warn(`Authentication failed for user ${userId}: Invalid API key`);
             return;
           }
 
