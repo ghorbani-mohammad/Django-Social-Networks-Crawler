@@ -201,6 +201,41 @@ app.post('/api/notify-job', async (req, res) => {
   }
 });
 
+// API endpoint for broadcasting job notifications to all users (called from Django)
+app.post('/api/broadcast-job', async (req, res) => {
+  try {
+    logger.info(`Broadcast job notification payload: ${JSON.stringify(req.body)}`);
+    const { job } = req.body;
+    
+    if (!job) {
+      logger.error(`Missing required field: job=${!!job}`);
+      return res.status(400).json({ error: 'job data is required' });
+    }
+
+    // Notify all connected users about new job
+    const message = {
+      type: 'new_job',
+      job,
+      timestamp: new Date().toISOString()
+    };
+
+    // Send to all active connections
+    let notificationsSent = 0;
+    connections.forEach((conn, id) => {
+      if (conn.ws.readyState === 1) {
+        conn.ws.send(JSON.stringify(message));
+        notificationsSent++;
+      }
+    });
+
+    logger.info(`Job notification broadcast to ${notificationsSent} connections: ${job.title}`);
+    res.json({ success: true, notificationsSent });
+  } catch (error) {
+    logger.error('Broadcast job notification error:', error);
+    res.status(500).json({ error: 'Failed to broadcast job notification' });
+  }
+});
+
 // Get recent jobs from Django database
 app.get('/api/jobs/:userId', async (req, res) => {
   try {

@@ -1,11 +1,11 @@
 import pickle
 import sys
 import time
-import requests
 import traceback
 from typing import Optional, Tuple
 
 import redis
+import requests
 from celery import shared_task
 from celery.utils.log import get_task_logger
 from django.conf import settings
@@ -44,13 +44,12 @@ DUPLICATE_CHECKER = redis.StrictRedis(host="social_redis", port=6379, db=5)
 LINKEDIN_URL = "https://www.linkedin.com/"
 
 
-def send_websocket_notification(user_id: str, job_data: dict):
-    """Send job notification to WebSocket service."""
+def send_websocket_notification(job_data: dict):
+    """Send job notification to all connected WebSocket clients."""
 
     try:
-        websocket_url = "http://social_websocket:3000/api/notify-job"
+        websocket_url = "http://social_websocket:3000/api/broadcast-job"
         payload = {
-            "userId": user_id,
             "job": {
                 "title": job_data.get("title", "New Job"),
                 "description": job_data.get("description", ""),
@@ -665,19 +664,7 @@ def store_job(job_detail: dict, page_id: int, eligible: bool, reason: Optional[s
         # Send WebSocket notification for new eligible jobs
         if created and eligible:
             try:
-                # Get user_id from the page (JobSearch) if available
-                user_id = "admin"  # Default fallback
-                try:
-                    page = lin_models.JobSearch.objects.get(pk=page_id)
-                    # If you have a user field in JobSearch, use it
-                    # user_id = str(page.user.id) if hasattr(page, 'user') and page.user else "admin"
-                    user_id = (
-                        f"page_{page_id}"  # Use page_id as user identifier for now
-                    )
-                except Exception:
-                    pass
-
-                send_websocket_notification(user_id, job_detail)
+                send_websocket_notification(job_detail)
             except Exception as e:
                 logger.error(f"Failed to send WebSocket notification: {str(e)}")
 
