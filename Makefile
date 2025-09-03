@@ -22,4 +22,6 @@ clear-logs:
 	@: > logs/celery_info.log
 	@: > logs/all_error.log
 	@: > logs/all_info.log
+	@: > logs/nodejs_error.log
+	@: > logs/nodejs_combined.log
 	@echo "Logs cleared"
