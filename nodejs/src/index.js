@@ -169,7 +169,7 @@ wss.on('connection', async (ws, request) => {
 // API endpoint for job notifications (called from Django)
 app.post('/api/notify-job', async (req, res) => {
   try {
-    logger.info(`Job notification payload: ${JSON.stringify(req.body)}`);
+    logger.info(`Job notification payload`);
     const { userId, job } = req.body;
     
     if (!userId || !job) {
@@ -204,7 +204,7 @@ app.post('/api/notify-job', async (req, res) => {
 // API endpoint for broadcasting job notifications to all users (called from Django)
 app.post('/api/broadcast-job', async (req, res) => {
   try {
-    logger.info(`Broadcast job notification payload: ${JSON.stringify(req.body)}`);
+    logger.info(`Broadcast job notification payload`);
     const { job } = req.body;
     
     if (!job) {
