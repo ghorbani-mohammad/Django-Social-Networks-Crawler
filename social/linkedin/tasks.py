@@ -576,6 +576,7 @@ def send_notification(message, data, keywords, output_channel_pk, cover_letter: 
         .replace("company", data["company"])
         .replace("size", data["company_size"])
         .replace("easy_apply", data["easy_apply"])
+        .replace("id", data["id"])
         .replace("keywords", check_keywords(data["description"], keywords))
     )
     # Ensure exactly one blank line before URL
@@ -661,12 +662,7 @@ def store_job(job_detail: dict, page_id: int, eligible: bool, reason: Optional[s
             countdown=10,
         )
 
-        # Send WebSocket notification for new eligible jobs
-        if created and eligible:
-            try:
-                send_websocket_notification(job_detail)
-            except Exception as e:
-                logger.error(f"Failed to send WebSocket notification: {str(e)}")
+        # WebSocket notification is now handled by the post_save signal
 
         return obj.pk
     except Exception:
@@ -903,14 +899,13 @@ def process_job_item(
 
     eligible, reason = is_eligible(ig_filters, just_easily_apply, job_detail)
     # Persist every crawled job with decision
+    # The post_save signal will handle sending notifications for eligible jobs
     store_job.delay(job_detail, page_id, eligible, reason)
     if not eligible:
         logger.info(f"Job is not eligible, reason: {reason}")
         store_ignored_content.delay(job_detail, reason)
         return None
 
-    time.sleep(2)  # Delay between sending each message
-    send_notification(message, job_detail, keywords, output_channel, cover_letter)
     return job_id
 
 

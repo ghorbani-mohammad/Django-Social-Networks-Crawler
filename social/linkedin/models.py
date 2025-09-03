@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from user.models import Profile
 
 from reusable.models import BaseModel
@@ -178,3 +180,49 @@ class IgnoredAccount(BaseModel):
 
     def __str__(self):
         return f"({self.pk} - {self.account_name})"
+
+
+@receiver(post_save, sender=Job)
+def job_post_save(sender, instance, created, **kwargs):
+    """Send notification when a new eligible job is created."""
+    # Only send notification for newly created jobs that are eligible
+    if created and instance.eligible and instance.page:
+        # Import here to avoid circular imports
+        from . import tasks
+
+        # Prepare job data for notification
+        job_data = {
+            "id": instance.pk,
+            "network_id": instance.network_id,
+            "url": instance.url,
+            "title": instance.title,
+            "company": instance.company,
+            "location": instance.location,
+            "description": instance.description,
+            "language": instance.language,
+            "company_size": instance.company_size,
+            "easy_apply": "✅" if instance.easy_apply else "❌",
+        }
+
+        # Get page data for notification
+        page = instance.page
+        message = page.message
+        keywords = page.keywords_in_array
+        output_channel_pk = page.output_channel.pk if page.output_channel else None
+        cover_letter = ""  # Can be enhanced later if needed
+
+        if output_channel_pk:
+            # Send notification asynchronously
+            tasks.send_notification(
+                message, job_data, keywords, output_channel_pk, cover_letter
+            )
+
+        # Also send WebSocket notification for real-time updates
+        try:
+            tasks.send_websocket_notification(job_data)
+        except Exception as e:
+            # Import logger here to avoid circular imports
+            import logging
+
+            logger = logging.getLogger(__name__)
+            logger.error(f"Failed to send WebSocket notification: {str(e)}")
