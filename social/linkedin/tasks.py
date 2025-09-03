@@ -906,6 +906,7 @@ def process_job_item(
         store_ignored_content.delay(job_detail, reason)
         return None
 
+    time.sleep(2)  # Delay between sending each message
     return job_id
 
 
