@@ -1,3 +1,12 @@
+# [1.64.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.63.4...v1.64.0) (2025-09-03)
+
+
+### Features
+
+* **socket:** add API endpoint for broadcasting job notifications to all users ([d403a5b](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/d403a5bd033935ca5b262414c7fd7993db26cd05))
+
+
+
 ## [1.63.4](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.63.3...v1.63.4) (2025-09-02)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **linkedin:** update article body formatting to use HTML line breaks for poster information ([22606dc](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/22606dc6bf38077465926520c65691ca3cd7dbf6))
-
-
-
-# [1.63.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.62.0...v1.63.0) (2025-09-02)
-
-
-### Features
-
-* **linkedin:** include poster information in article body if available ([83ac658](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/83ac658bb82630c15b073201905e45802f70f70b))
 
 
 
