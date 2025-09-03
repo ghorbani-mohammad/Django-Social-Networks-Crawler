@@ -1,6 +1,7 @@
 import pickle
 import sys
 import time
+import requests
 import traceback
 from typing import Optional, Tuple
 
@@ -45,7 +46,6 @@ LINKEDIN_URL = "https://www.linkedin.com/"
 
 def send_websocket_notification(user_id: str, job_data: dict):
     """Send job notification to WebSocket service."""
-    import requests
 
     try:
         websocket_url = "http://social_websocket:3000/api/notify-job"
