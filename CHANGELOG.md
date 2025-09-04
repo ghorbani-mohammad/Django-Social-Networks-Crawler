@@ -1,3 +1,12 @@
+# [1.65.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.64.0...v1.65.0) (2025-09-04)
+
+
+### Features
+
+* **linkedin:** implement post_save signal for job notifications and enhance JobSerializer ([130d549](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/130d549672589ea3b47fbaba267fe6c5ec9b7877))
+
+
+
 # [1.64.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.63.4...v1.64.0) (2025-09-03)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **linkedin:** enhance poster extraction logic to avoid duplication and improve fallback handling ([2b11d87](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/2b11d87d36c1dabf276091c96f64e9cc1509c0e7))
-
-
-
-## [1.63.1](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.63.0...v1.63.1) (2025-09-02)
-
-
-### Bug Fixes
-
-* **linkedin:** update article body formatting to use HTML line breaks for poster information ([22606dc](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/22606dc6bf38077465926520c65691ca3cd7dbf6))
 
 
 
