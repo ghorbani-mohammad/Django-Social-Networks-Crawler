@@ -214,16 +214,17 @@ def job_post_save(sender, instance, created, **kwargs):
     message = page.message
     keywords = page.keywords_in_array
     output_channel_pk = page.output_channel.pk if page.output_channel else None
-    cover_letter = ""  # Can be enhanced later if needed
 
     if output_channel_pk:
+        logger.info(f"Sending Telegram notification for job: {instance.title}")
         # Send notification asynchronously
-        tasks.send_notification(
-            message, job_data, keywords, output_channel_pk, cover_letter
+        tasks.send_notification.delay(
+            message, job_data, keywords, output_channel_pk, ""
         )
 
     # Also send WebSocket notification for real-time updates
     try:
+        logger.info(f"Sending WebSocket notification for job: {instance.title}")
         tasks.send_websocket_notification(job_data)
     except Exception as e:
         logger.error(f"Failed to send WebSocket notification: {str(e)}")
