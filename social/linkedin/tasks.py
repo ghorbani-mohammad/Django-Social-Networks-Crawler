@@ -51,6 +51,7 @@ def send_websocket_notification(job_data: dict):
         websocket_url = "http://social_websocket:3000/api/broadcast-job"
         payload = {
             "job": {
+                "id": job_data.get("id"),
                 "title": job_data.get("title", "New Job"),
                 "description": job_data.get("description", ""),
                 "company": job_data.get("company"),
