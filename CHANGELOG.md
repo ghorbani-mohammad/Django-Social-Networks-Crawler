@@ -1,3 +1,12 @@
+## [1.65.1](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.65.0...v1.65.1) (2025-09-04)
+
+
+### Bug Fixes
+
+* **linkedin:** convert job notification ID to string for consistent payload formatting ([ff9c6aa](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/ff9c6aaa4b8695a677535986b913ca1f40b7e454))
+
+
+
 # [1.65.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.64.0...v1.65.0) (2025-09-04)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **server:** replace Socket.IO with WebSocket for improved connection handling ([1d55d00](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/1d55d00a30805f32027a6c06d603f5be05012e2b))
-
-
-
-## [1.63.2](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.63.1...v1.63.2) (2025-09-02)
-
-
-### Bug Fixes
-
-* **linkedin:** enhance poster extraction logic to avoid duplication and improve fallback handling ([2b11d87](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/2b11d87d36c1dabf276091c96f64e9cc1509c0e7))
 
 
 
