@@ -577,7 +577,7 @@ def send_notification(message, data, keywords, output_channel_pk, cover_letter: 
         .replace("company", data["company"])
         .replace("size", data["company_size"])
         .replace("easy_apply", data["easy_apply"])
-        .replace("id", data["id"])
+        .replace("id", str(data["id"]))
         .replace("keywords", check_keywords(data["description"], keywords))
     )
     # Ensure exactly one blank line before URL
