@@ -560,6 +560,7 @@ def check_keywords(body, keywords):
     return "\n\n" + "\n".join(hits)
 
 
+@shared_task
 def send_notification(message, data, keywords, output_channel_pk, cover_letter: str):
     """This function gets a message template and places the retrieved data into that.
     Then sends it to specified output channel
