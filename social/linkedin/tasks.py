@@ -9,6 +9,7 @@ import requests
 from celery import shared_task
 from celery.utils.log import get_task_logger
 from django.conf import settings
+from django.test import RequestFactory
 from django.utils import timezone
 from django.utils.html import strip_tags
 from langdetect import detect
@@ -44,24 +45,26 @@ DUPLICATE_CHECKER = redis.StrictRedis(host="social_redis", port=6379, db=5)
 LINKEDIN_URL = "https://www.linkedin.com/"
 
 
-def send_websocket_notification(job_data: dict):
+def send_websocket_notification(job_instance):
     """Send job notification to all connected WebSocket clients."""
+    from .serializers import JobSerializer
 
     try:
         websocket_url = "http://social_websocket:3000/api/broadcast-job"
-        payload = {
-            "job": {
-                "id": job_data.get("id"),
-                "title": job_data.get("title", "New Job"),
-                "description": job_data.get("description", ""),
-                "company": job_data.get("company"),
-                "location": job_data.get("location"),
-                "url": job_data.get("url"),
-                "language": job_data.get("language"),
-                "easy_apply": job_data.get("easy_apply", False),
-                "network_id": job_data.get("network_id"),
-            }
-        }
+
+        # Create a mock request context for absolute URL generation
+        factory = RequestFactory()
+        request = factory.get("/")
+        # Use Django's ALLOWED_HOSTS or default to localhost
+        host = (
+            getattr(settings, "ALLOWED_HOSTS", ["localhost"])[0]
+            if settings.ALLOWED_HOSTS
+            else "localhost"
+        )
+        request.META["HTTP_HOST"] = f"{host}:8000"
+
+        serializer = JobSerializer(job_instance, context={"request": request})
+        payload = {"job": serializer.data}
 
         response = requests.post(
             websocket_url,

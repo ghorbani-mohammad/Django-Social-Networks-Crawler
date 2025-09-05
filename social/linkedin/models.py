@@ -7,8 +7,8 @@ from user.models import Profile
 
 from reusable.models import BaseModel
 
-
 logger = logging.getLogger(__name__)
+
 
 class Keyword(BaseModel):
     name = models.CharField(max_length=20)
@@ -225,6 +225,6 @@ def job_post_save(sender, instance, created, **kwargs):
     # Also send WebSocket notification for real-time updates
     try:
         logger.info(f"Sending WebSocket notification for job: {instance.title}")
-        tasks.send_websocket_notification(job_data)
+        tasks.send_websocket_notification(instance)
     except Exception as e:
         logger.error(f"Failed to send WebSocket notification: {str(e)}")
