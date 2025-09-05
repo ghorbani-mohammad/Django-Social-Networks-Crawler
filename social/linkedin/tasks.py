@@ -56,13 +56,9 @@ def send_websocket_notification(job_instance):
         # Create a mock request context for absolute URL generation
         factory = RequestFactory()
         request = factory.get("/")
-        # Use Django's ALLOWED_HOSTS or default to localhost
-        host = (
-            getattr(settings, "ALLOWED_HOSTS", ["localhost"])[0]
-            if settings.ALLOWED_HOSTS
-            else "localhost"
-        )
-        request.META["HTTP_HOST"] = f"{host}:8000"
+        # Use the production domain for image URLs
+        request.META["HTTP_HOST"] = "social.m-gh.com"
+        request.META["wsgi.url_scheme"] = "https"
 
         # Ensure we have the latest data with prefetched relationships
         job_instance.refresh_from_db()
