@@ -1,5 +1,6 @@
 import logging
 
+from celery import current_app
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -222,9 +223,13 @@ def job_post_save(sender, instance, created, **kwargs):
             message, job_data, keywords, output_channel_pk, ""
         )
 
-    # Also send WebSocket notification for real-time updates
+    # Schedule WebSocket notification for 20 seconds later to allow keyword processing
     try:
-        logger.info(f"Sending WebSocket notification for job: {instance.title}")
-        tasks.send_websocket_notification(instance)
+        logger.info(f"Scheduling WebSocket notification for job: {instance.title}")
+        current_app.send_task(
+            "linkedin.tasks.send_websocket_notification_task",
+            args=[instance.pk],
+            countdown=20,
+        )
     except Exception as e:
-        logger.error(f"Failed to send WebSocket notification: {str(e)}")
+        logger.error(f"Failed to schedule WebSocket notification: {str(e)}")

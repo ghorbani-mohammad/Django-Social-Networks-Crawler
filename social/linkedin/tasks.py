@@ -47,6 +47,7 @@ LINKEDIN_URL = "https://www.linkedin.com/"
 
 def send_websocket_notification(job_instance):
     """Send job notification to all connected WebSocket clients."""
+    from . import models as lin_models
     from .serializers import JobSerializer
 
     try:
@@ -63,7 +64,13 @@ def send_websocket_notification(job_instance):
         )
         request.META["HTTP_HOST"] = f"{host}:8000"
 
-        serializer = JobSerializer(job_instance, context={"request": request})
+        # Ensure we have the latest data with prefetched relationships
+        job_instance.refresh_from_db()
+        job_with_relations = lin_models.Job.objects.prefetch_related(
+            "matched_keywords"
+        ).get(pk=job_instance.pk)
+
+        serializer = JobSerializer(job_with_relations, context={"request": request})
         payload = {"job": serializer.data}
 
         response = requests.post(
@@ -74,7 +81,9 @@ def send_websocket_notification(job_instance):
         )
 
         if response.status_code == 200:
-            logger.info(f"WebSocket notification sent for job: {job_data.get('title')}")
+            logger.info(
+                f"WebSocket notification sent for job: {job_with_relations.title}"
+            )
         else:
             logger.error(
                 f"Failed to send WebSocket notification: {response.status_code}"
@@ -82,6 +91,18 @@ def send_websocket_notification(job_instance):
 
     except Exception as e:
         logger.error(f"Error sending WebSocket notification: {str(e)}")
+
+
+@shared_task
+def send_websocket_notification_task(job_id: int):
+    """Celery task to send WebSocket notification for a job by ID."""
+    try:
+        job = lin_models.Job.objects.get(pk=job_id)
+        send_websocket_notification(job)
+    except lin_models.Job.DoesNotExist:
+        logger.error(f"Job {job_id} not found for WebSocket notification")
+    except Exception as e:
+        logger.error(f"Error in WebSocket notification task for job {job_id}: {str(e)}")
 
 
 def get_config():
