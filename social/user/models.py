@@ -1,4 +1,8 @@
+import secrets
+from datetime import timedelta
+
 from django.db import models
+from django.utils import timezone
 
 from reusable.models import BaseModel
 
@@ -9,5 +13,64 @@ class Profile(BaseModel):
     chat_id = models.CharField(max_length=15, unique=True, null=True, blank=True)
     about_me = models.TextField(null=True, blank=True)
 
+    # Email verification fields
+    verification_code = models.CharField(max_length=6, null=True, blank=True)
+    verification_expires_at = models.DateTimeField(null=True, blank=True)
+    verification_attempts = models.IntegerField(default=0)
+    is_email_verified = models.BooleanField(default=False)
+
     def __str__(self):
-        return f"({self.pk} - {self.cell_number})"
+        return f"({self.pk} - {self.cell_number or self.user.email})"
+
+    def save(self, *args, **kwargs):
+        if not self.verification_code and not self.is_email_verified:
+            self.verification_code = self.generate_verification_code()
+        if not self.verification_expires_at and not self.is_email_verified:
+            self.verification_expires_at = timezone.now() + timedelta(minutes=10)
+        super().save(*args, **kwargs)
+
+    @staticmethod
+    def generate_verification_code():
+        return str(secrets.randbelow(900000) + 100000)
+
+    def is_verification_expired(self):
+        if not self.verification_expires_at:
+            return True
+        return timezone.now() > self.verification_expires_at
+
+    def can_attempt_verification(self):
+        max_attempts = 3
+        return (
+            self.verification_attempts < max_attempts
+            and not self.is_verification_expired()
+        )
+
+    def increment_verification_attempts(self):
+        self.verification_attempts += 1
+        self.save(update_fields=["verification_attempts"])
+
+    def mark_email_as_verified(self):
+        self.is_email_verified = True
+        self.verification_code = None
+        self.verification_expires_at = None
+        self.verification_attempts = 0
+        self.save(
+            update_fields=[
+                "is_email_verified",
+                "verification_code",
+                "verification_expires_at",
+                "verification_attempts",
+            ]
+        )
+
+    def reset_verification_code(self):
+        self.verification_code = self.generate_verification_code()
+        self.verification_expires_at = timezone.now() + timedelta(minutes=10)
+        self.verification_attempts = 0
+        self.save(
+            update_fields=[
+                "verification_code",
+                "verification_expires_at",
+                "verification_attempts",
+            ]
+        )
