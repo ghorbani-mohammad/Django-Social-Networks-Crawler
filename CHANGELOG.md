@@ -1,3 +1,12 @@
+# [1.66.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.65.1...v1.66.0) (2025-09-06)
+
+
+### Features
+
+* **auth:** add djangorestframework-simplejwt for JWT authentication and configure token settings ([b2a3558](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/b2a355841fd356ad542b7c4685b3a83b8eb09b40))
+
+
+
 ## [1.65.1](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.65.0...v1.65.1) (2025-09-04)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **linkedin:** update WebSocket notification URL for job notifications ([3922f72](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/3922f72d7daad035d3f9558d6c76af867ba2f739))
-
-
-
-## [1.63.3](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.63.2...v1.63.3) (2025-09-02)
-
-
-### Bug Fixes
-
-* **server:** replace Socket.IO with WebSocket for improved connection handling ([1d55d00](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/1d55d00a30805f32027a6c06d603f5be05012e2b))
 
 
 
