@@ -4,6 +4,7 @@ from pathlib import Path
 import django
 import sentry_sdk
 from envparse import env
+from datetime import timedelta
 from sentry_sdk.integrations.django import DjangoIntegration
 
 DEBUG = env.bool("DEBUG")
@@ -29,6 +30,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "rest_framework_simplejwt",
     "django_filters",
     "network",
     "telegram",
@@ -250,6 +252,15 @@ if EMAIL_HOST_USER and ADMIN_EMAIL_LOG:
 REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
     "PAGE_SIZE": 10,
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ],
+}
+
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=7),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
 }
 
 # Media files
