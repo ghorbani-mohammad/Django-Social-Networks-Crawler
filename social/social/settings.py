@@ -1,10 +1,10 @@
 import os
+from datetime import timedelta
 from pathlib import Path
 
 import django
 import sentry_sdk
 from envparse import env
-from datetime import timedelta
 from sentry_sdk.integrations.django import DjangoIntegration
 
 DEBUG = env.bool("DEBUG")

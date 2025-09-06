@@ -7,8 +7,8 @@ from user.models import Profile
 
 from reusable.models import BaseModel
 
-
 logger = logging.getLogger(__name__)
+
 
 class Keyword(BaseModel):
     name = models.CharField(max_length=20)
