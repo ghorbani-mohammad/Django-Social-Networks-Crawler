@@ -1,3 +1,12 @@
+# [1.67.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.66.0...v1.67.0) (2025-09-06)
+
+
+### Features
+
+* **user:** implement email verification flow with serializers, views, and URLs; add token refresh endpoint ([7ecfd03](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/7ecfd035656cb89b225b37cbe0881fffba8646a0))
+
+
+
 # [1.66.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.65.1...v1.66.0) (2025-09-06)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * **socket:** add API endpoint for broadcasting job notifications to all users ([d403a5b](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/d403a5bd033935ca5b262414c7fd7993db26cd05))
-
-
-
-## [1.63.4](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.63.3...v1.63.4) (2025-09-02)
-
-
-### Bug Fixes
-
-* **linkedin:** update WebSocket notification URL for job notifications ([3922f72](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/3922f72d7daad035d3f9558d6c76af867ba2f739))
 
 
 
