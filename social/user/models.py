@@ -74,3 +74,33 @@ class Profile(BaseModel):
                 "verification_attempts",
             ]
         )
+
+    def add_favorite_job(self, job):
+        """Add a job to user's favorites."""
+        from linkedin.models import FavoriteJob
+
+        favorite, created = FavoriteJob.objects.get_or_create(profile=self, job=job)
+        return favorite, created
+
+    def remove_favorite_job(self, job):
+        """Remove a job from user's favorites."""
+        from linkedin.models import FavoriteJob
+
+        try:
+            favorite = FavoriteJob.objects.get(profile=self, job=job)
+            favorite.delete()
+            return True
+        except FavoriteJob.DoesNotExist:
+            return False
+
+    def is_job_favorite(self, job):
+        """Check if a job is in user's favorites."""
+        from linkedin.models import FavoriteJob
+
+        return FavoriteJob.objects.filter(profile=self, job=job).exists()
+
+    def get_favorite_jobs(self):
+        """Get all favorite jobs for this user."""
+        from linkedin.models import Job
+
+        return Job.objects.filter(favorited_by__profile=self).order_by("-created_at")

@@ -164,3 +164,42 @@ class JobAdmin(ReadOnlyAdminDateFieldsMIXIN):
 @admin.register(models.IgnoredAccount)
 class IgnoredAccountAdmin(ReadOnlyAdminDateFieldsMIXIN):
     list_display = ("pk", "account_name", "created_at")
+
+
+@admin.register(models.FavoriteJob)
+class FavoriteJobAdmin(ReadOnlyAdminDateFieldsMIXIN):
+    list_display = (
+        "pk",
+        "profile",
+        "job_title",
+        "job_company",
+        "job_url",
+        "created_at",
+    )
+    list_filter = ("profile", "created_at")
+    search_fields = (
+        "profile__user__email",
+        "job__title",
+        "job__company",
+        "job__location",
+    )
+    readonly_fields = tuple(
+        field.name for field in models.FavoriteJob._meta.get_fields()
+    )
+
+    def job_title(self, obj: models.FavoriteJob):
+        return obj.job.title if obj.job else "-"
+
+    def job_company(self, obj: models.FavoriteJob):
+        return obj.job.company if obj.job else "-"
+
+    def job_url(self, obj: models.FavoriteJob):
+        if obj.job and obj.job.url:
+            return format_html(
+                "<a href='{url}' target='_blank'>View Job</a>", url=obj.job.url
+            )
+        return "-"
+
+    job_title.short_description = "Job Title"
+    job_company.short_description = "Company"
+    job_url.short_description = "Job URL"
