@@ -1,3 +1,12 @@
+# [1.69.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.68.0...v1.69.0) (2025-09-07)
+
+
+### Features
+
+* **linkedin:** add Job Favorites API documentation, serializers, views, and endpoints for managing user favorites ([de56204](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/de56204366d9813cdc1647acdf49df24e8b846ef))
+
+
+
 # [1.68.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.67.0...v1.68.0) (2025-09-07)
 
 
@@ -32,15 +41,6 @@
 ### Bug Fixes
 
 * **linkedin:** convert job notification ID to string for consistent payload formatting ([ff9c6aa](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/ff9c6aaa4b8695a677535986b913ca1f40b7e454))
-
-
-
-# [1.65.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.64.0...v1.65.0) (2025-09-04)
-
-
-### Features
-
-* **linkedin:** implement post_save signal for job notifications and enhance JobSerializer ([130d549](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/130d549672589ea3b47fbaba267fe6c5ec9b7877))
 
 
 
