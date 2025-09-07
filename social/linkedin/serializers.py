@@ -100,3 +100,18 @@ class JobSerializer(serializers.ModelSerializer):
             kw.strip() for kw in obj.found_keywords.split(",") if kw.strip()
         ]
         return [f"#{keyword}" for keyword in found_keywords_list]
+
+
+class FavoriteJobSerializer(serializers.ModelSerializer):
+    job = JobSerializer(read_only=True)
+    job_id = serializers.IntegerField(write_only=True)
+
+    class Meta:
+        model = models.FavoriteJob
+        fields = (
+            "id",
+            "job",
+            "job_id",
+            "created_at",
+        )
+        read_only_fields = ("id", "created_at", "profile")
