@@ -183,7 +183,9 @@ class FavoriteJobAdmin(ReadOnlyAdminDateFieldsMIXIN):
         "job__company",
         "job__location",
     )
-    readonly_fields = tuple(field.name for field in models.FavoriteJob._meta.get_fields())
+    readonly_fields = tuple(
+        field.name for field in models.FavoriteJob._meta.get_fields()
+    )
 
     def job_title(self, obj: models.FavoriteJob):
         return obj.job.title if obj.job else "-"
@@ -193,7 +195,9 @@ class FavoriteJobAdmin(ReadOnlyAdminDateFieldsMIXIN):
 
     def job_url(self, obj: models.FavoriteJob):
         if obj.job and obj.job.url:
-            return format_html("<a href='{url}' target='_blank'>View Job</a>", url=obj.job.url)
+            return format_html(
+                "<a href='{url}' target='_blank'>View Job</a>", url=obj.job.url
+            )
         return "-"
 
     job_title.short_description = "Job Title"

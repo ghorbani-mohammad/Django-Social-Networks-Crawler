@@ -188,19 +188,14 @@ class IgnoredAccount(BaseModel):
 
 class FavoriteJob(BaseModel):
     """Model to track user's favorite jobs."""
+
     profile = models.ForeignKey(
-        Profile,
-        on_delete=models.CASCADE,
-        related_name="favorite_jobs"
+        Profile, on_delete=models.CASCADE, related_name="favorite_jobs"
     )
-    job = models.ForeignKey(
-        Job,
-        on_delete=models.CASCADE,
-        related_name="favorited_by"
-    )
+    job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name="favorited_by")
 
     class Meta:
-        unique_together = ('profile', 'job')
+        unique_together = ("profile", "job")
         verbose_name = "Favorite Job"
         verbose_name_plural = "Favorite Jobs"
 
