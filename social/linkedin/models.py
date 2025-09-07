@@ -186,6 +186,28 @@ class IgnoredAccount(BaseModel):
         return f"({self.pk} - {self.account_name})"
 
 
+class FavoriteJob(BaseModel):
+    """Model to track user's favorite jobs."""
+    profile = models.ForeignKey(
+        Profile,
+        on_delete=models.CASCADE,
+        related_name="favorite_jobs"
+    )
+    job = models.ForeignKey(
+        Job,
+        on_delete=models.CASCADE,
+        related_name="favorited_by"
+    )
+
+    class Meta:
+        unique_together = ('profile', 'job')
+        verbose_name = "Favorite Job"
+        verbose_name_plural = "Favorite Jobs"
+
+    def __str__(self):
+        return f"({self.profile.user.email} - {self.job.title})"
+
+
 @receiver(post_save, sender=Job)
 def job_post_save(sender, instance, created, **kwargs):
     """Send notification when a new eligible job is created."""
