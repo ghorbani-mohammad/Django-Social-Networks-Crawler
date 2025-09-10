@@ -114,6 +114,10 @@ class ProfileSerializer(serializers.ModelSerializer):
             "cell_number",
             "chat_id",
             "about_me",
+            "email",
+            "additional_notes",
+            "education_background",
+            "professional_experience",
             "is_email_verified",
         )
         read_only_fields = ("id", "user")
