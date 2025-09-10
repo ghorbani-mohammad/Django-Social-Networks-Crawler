@@ -1,3 +1,12 @@
+## [1.70.1](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.70.0...v1.70.1) (2025-09-10)
+
+
+### Bug Fixes
+
+* **profile:** change cell_number field from SlugField to CharField with increased max_length ([6a97249](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/6a97249d1a04f3d31da499e1a61ff1be8a8aa328))
+
+
+
 # [1.70.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.69.0...v1.70.0) (2025-09-10)
 
 
@@ -32,15 +41,6 @@
 ### Features
 
 * **user:** implement email verification flow with serializers, views, and URLs; add token refresh endpoint ([7ecfd03](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/7ecfd035656cb89b225b37cbe0881fffba8646a0))
-
-
-
-# [1.66.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.65.1...v1.66.0) (2025-09-06)
-
-
-### Features
-
-* **auth:** add djangorestframework-simplejwt for JWT authentication and configure token settings ([b2a3558](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/b2a355841fd356ad542b7c4685b3a83b8eb09b40))
 
 
 
