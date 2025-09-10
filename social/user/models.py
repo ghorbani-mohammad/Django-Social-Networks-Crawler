@@ -12,6 +12,10 @@ class Profile(BaseModel):
     cell_number = models.SlugField(max_length=11, unique=True, null=True, blank=True)
     chat_id = models.CharField(max_length=15, unique=True, null=True, blank=True)
     about_me = models.TextField(null=True, blank=True)
+    email = models.EmailField(null=True, blank=True)
+    additional_notes = models.TextField(null=True, blank=True)
+    education_background = models.TextField(null=True, blank=True)
+    professional_experience = models.TextField(null=True, blank=True)
 
     # Email verification fields
     verification_code = models.CharField(max_length=6, null=True, blank=True)
