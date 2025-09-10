@@ -1,3 +1,12 @@
+# [1.70.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.69.0...v1.70.0) (2025-09-10)
+
+
+### Features
+
+* **profile:** add email and additional fields to Profile model and serializer ([23b7588](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/23b75883983e54dd47607688d9d38848b5a1a132))
+
+
+
 # [1.69.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.68.0...v1.69.0) (2025-09-07)
 
 
@@ -32,15 +41,6 @@
 ### Features
 
 * **auth:** add djangorestframework-simplejwt for JWT authentication and configure token settings ([b2a3558](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/b2a355841fd356ad542b7c4685b3a83b8eb09b40))
-
-
-
-## [1.65.1](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.65.0...v1.65.1) (2025-09-04)
-
-
-### Bug Fixes
-
-* **linkedin:** convert job notification ID to string for consistent payload formatting ([ff9c6aa](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/ff9c6aaa4b8695a677535986b913ca1f40b7e454))
 
 
 
