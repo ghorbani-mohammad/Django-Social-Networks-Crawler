@@ -201,8 +201,7 @@ def profile_detail(request):
 
 
 @api_view(["POST"])
-@authentication_classes([JWTAuthentication, SessionAuthentication])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def refresh_token(request):
     """Refresh JWT access token"""
     refresh_token = request.data.get("refresh")
@@ -229,5 +228,4 @@ def refresh_token(request):
 
 # Custom TokenRefreshView with explicit authentication
 class TokenRefreshView(DRFTokenRefreshView):
-    authentication_classes = [JWTAuthentication, SessionAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
