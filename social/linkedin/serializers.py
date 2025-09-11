@@ -44,6 +44,7 @@ class JobSerializer(serializers.ModelSerializer):
             "url",
             "title",
             "company",
+            "source",
             "found_keywords",
             "found_keywords_as_hashtags",
             "keywords_as_hashtags",

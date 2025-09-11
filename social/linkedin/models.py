@@ -142,8 +142,24 @@ class ExpressionSearch(BaseModel):
 class Job(BaseModel):
     """Stores all crawled LinkedIn jobs regardless of eligibility."""
 
+    # Source choices
+    LINKEDIN = "linkedin"
+    WORKABLE = "workable"
+    SOURCE_CHOICES = [
+        (LINKEDIN, "LinkedIn"),
+        (WORKABLE, "Workable"),
+    ]
+
     # A stable id we read from the job card, used for upserts/deduplication
     network_id = models.CharField(max_length=100, unique=True, null=True, blank=True)
+
+    # Job source
+    source = models.CharField(
+        max_length=20,
+        choices=SOURCE_CHOICES,
+        default=LINKEDIN,
+        help_text="The source website where this job was found"
+    )
 
     # Basic job fields
     url = models.URLField(null=True, blank=True)
@@ -175,7 +191,7 @@ class Job(BaseModel):
     )
 
     def __str__(self):
-        return f"({self.pk} - {self.title})"
+        return f"({self.pk} - {self.title} - {self.get_source_display()})"
 
 
 class IgnoredAccount(BaseModel):
@@ -225,6 +241,7 @@ def job_post_save(sender, instance, created, **kwargs):
         "language": instance.language,
         "company_size": instance.company_size,
         "easy_apply": "✅" if instance.easy_apply else "❌",
+        "source": instance.get_source_display(),
     }
 
     # Get page data for notification
