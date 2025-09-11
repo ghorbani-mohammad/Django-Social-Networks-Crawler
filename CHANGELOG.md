@@ -1,3 +1,12 @@
+## [1.70.2](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.70.1...v1.70.2) (2025-09-11)
+
+
+### Bug Fixes
+
+* **auth:** update permission classes for refresh_token and TokenRefreshView to AllowAny ([c05d46f](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/c05d46fe24c084a848415d4819ca8129771feb78))
+
+
+
 ## [1.70.1](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.70.0...v1.70.1) (2025-09-10)
 
 
@@ -32,15 +41,6 @@
 
 * **linkedin:** add FavoriteJob model and methods for managing user favorites in Job and Profile models ([5189170](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/51891702c297eed83923550a23cb14772453ec14))
 * **linkedin:** add FavoriteJobAdmin to manage user favorite jobs with display, filtering, and search capabilities ([3b73c03](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/3b73c031b2b02e9951804004dceedcc0a0ca4e1e))
-
-
-
-# [1.67.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.66.0...v1.67.0) (2025-09-06)
-
-
-### Features
-
-* **user:** implement email verification flow with serializers, views, and URLs; add token refresh endpoint ([7ecfd03](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/7ecfd035656cb89b225b37cbe0881fffba8646a0))
 
 
 
