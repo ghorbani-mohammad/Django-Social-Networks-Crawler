@@ -1,3 +1,12 @@
+# [1.71.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.70.2...v1.71.0) (2025-09-11)
+
+
+### Features
+
+* **linkedin:** add source field to Job model with choices for job origin ([b55bedb](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/b55bedbf6c47b116cc585152471c23e29803a329))
+
+
+
 ## [1.70.2](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.70.1...v1.70.2) (2025-09-11)
 
 
@@ -31,16 +40,6 @@
 ### Features
 
 * **linkedin:** add Job Favorites API documentation, serializers, views, and endpoints for managing user favorites ([de56204](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/de56204366d9813cdc1647acdf49df24e8b846ef))
-
-
-
-# [1.68.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.67.0...v1.68.0) (2025-09-07)
-
-
-### Features
-
-* **linkedin:** add FavoriteJob model and methods for managing user favorites in Job and Profile models ([5189170](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/51891702c297eed83923550a23cb14772453ec14))
-* **linkedin:** add FavoriteJobAdmin to manage user favorite jobs with display, filtering, and search capabilities ([3b73c03](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/3b73c031b2b02e9951804004dceedcc0a0ca4e1e))
 
 
 
