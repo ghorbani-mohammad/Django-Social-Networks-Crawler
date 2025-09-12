@@ -178,6 +178,12 @@ ADMIN_EMAIL_LOG = env("ADMIN_EMAIL_LOG", default=None)
 LOG_LEVEL = env("LOG_LEVEL", default="ERROR")
 ADMINS = (("Log Admin", ADMIN_EMAIL_LOG),)
 
+# JWT Settings - Must be defined before django.setup()
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=7),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
+}
+
 django.setup()  # we need setup django to have access to apps
 # Logging (Just Email Handler)
 if EMAIL_HOST_USER and ADMIN_EMAIL_LOG:
@@ -257,11 +263,6 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 10,
 }
 
-
-SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(days=7),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
-}
 
 # Media files
 MEDIA_URL = "/media/"
