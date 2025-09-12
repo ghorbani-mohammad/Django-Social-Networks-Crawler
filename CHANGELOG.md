@@ -1,3 +1,12 @@
+## [1.71.2](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.71.1...v1.71.2) (2025-09-12)
+
+
+### Bug Fixes
+
+* **settings:** move JWT settings to the correct location in settings.py ([2df896c](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/2df896c37c8b337c5b15e3e406d72ee9625930fe))
+
+
+
 ## [1.71.1](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.71.0...v1.71.1) (2025-09-12)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **profile:** change cell_number field from SlugField to CharField with increased max_length ([6a97249](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/6a97249d1a04f3d31da499e1a61ff1be8a8aa328))
-
-
-
-# [1.70.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.69.0...v1.70.0) (2025-09-10)
-
-
-### Features
-
-* **profile:** add email and additional fields to Profile model and serializer ([23b7588](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/23b75883983e54dd47607688d9d38848b5a1a132))
 
 
 
