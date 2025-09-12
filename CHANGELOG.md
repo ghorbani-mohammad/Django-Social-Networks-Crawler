@@ -1,3 +1,12 @@
+## [1.71.1](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.71.0...v1.71.1) (2025-09-12)
+
+
+### Bug Fixes
+
+* **settings:** add JWT authentication to REST framework configuration ([b75c829](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/b75c8295bdecfba52c95fc87a5dffa2b02cd859e))
+
+
+
 # [1.71.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.70.2...v1.71.0) (2025-09-11)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * **profile:** add email and additional fields to Profile model and serializer ([23b7588](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/23b75883983e54dd47607688d9d38848b5a1a132))
-
-
-
-# [1.69.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.68.0...v1.69.0) (2025-09-07)
-
-
-### Features
-
-* **linkedin:** add Job Favorites API documentation, serializers, views, and endpoints for managing user favorites ([de56204](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/de56204366d9813cdc1647acdf49df24e8b846ef))
 
 
 
