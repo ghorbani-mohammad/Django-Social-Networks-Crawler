@@ -51,8 +51,7 @@ def request_email_verification(request):
     """Request email verification code"""
     serializer = EmailVerificationRequestSerializer(data=request.data)
 
-    if not serializer.is_valid():
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    serializer.is_valid(raise_exception=True)
 
     email = serializer.validated_data["email"]
 
@@ -87,8 +86,7 @@ def verify_email_code(request):
     """Verify email code and return JWT tokens"""
     serializer = EmailVerificationConfirmSerializer(data=request.data)
 
-    if not serializer.is_valid():
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    serializer.is_valid(raise_exception=True)
 
     email = serializer.validated_data["email"]
     code = serializer.validated_data["code"]
@@ -144,8 +142,7 @@ def register_user(request):
     """Register a new user with email verification"""
     serializer = UserRegistrationSerializer(data=request.data)
 
-    if not serializer.is_valid():
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    serializer.is_valid(raise_exception=True)
 
     try:
         user = serializer.save()
@@ -194,10 +191,9 @@ def profile_detail(request):
         serializer = ProfileSerializer(
             profile, data=request.data, partial=request.method == "PATCH"
         )
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 @api_view(["POST"])
