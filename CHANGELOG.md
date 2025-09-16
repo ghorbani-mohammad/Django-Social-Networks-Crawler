@@ -1,3 +1,12 @@
+# [1.75.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.74.0...v1.75.0) (2025-09-16)
+
+
+### Features
+
+* **admin:** add PaymentInvoice model and admin interface with custom display and readonly fields ([58e8e45](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/58e8e45e6d1eeb9c31657c845cc10c7590c0e087))
+
+
+
 # [1.74.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.73.0...v1.74.0) (2025-09-16)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **settings:** move JWT settings to the correct location in settings.py ([2df896c](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/2df896c37c8b337c5b15e3e406d72ee9625930fe))
-
-
-
-## [1.71.1](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.71.0...v1.71.1) (2025-09-12)
-
-
-### Bug Fixes
-
-* **settings:** add JWT authentication to REST framework configuration ([b75c829](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/b75c8295bdecfba52c95fc87a5dffa2b02cd859e))
 
 
 
