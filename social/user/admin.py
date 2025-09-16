@@ -1,8 +1,47 @@
+import json
+
+from django import forms
 from django.contrib import admin
 from django.utils.html import format_html
 
 from reusable.admins import ReadOnlyAdminDateFieldsMIXIN
 from . import models
+
+
+class SubscriptionPlanForm(forms.ModelForm):
+    """Custom form for SubscriptionPlan with better JSON handling."""
+
+    features = forms.CharField(
+        widget=forms.Textarea(attrs={"rows": 4, "cols": 50}),
+        help_text='Enter features as a JSON array. Example: ["Feature 1", "Feature 2", "Feature 3"]',
+        initial="[]",
+    )
+
+    class Meta:
+        model = models.SubscriptionPlan
+        fields = "__all__"
+
+    def clean_features(self):
+        features_data = self.cleaned_data.get("features")
+        if not features_data:
+            return []
+
+        try:
+            # Try to parse as JSON
+            parsed_features = json.loads(features_data)
+            if not isinstance(parsed_features, list):
+                raise forms.ValidationError("Features must be a JSON array (list).")
+            return parsed_features
+        except json.JSONDecodeError as e:
+            raise forms.ValidationError(f"Invalid JSON format: {str(e)}")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Convert existing features to JSON string for display
+        if self.instance and self.instance.pk and self.instance.features:
+            self.fields["features"].initial = json.dumps(
+                self.instance.features, indent=2
+            )
 
 
 @admin.register(models.Profile)
@@ -53,6 +92,8 @@ class ProfileAdmin(ReadOnlyAdminDateFieldsMIXIN):
 
 @admin.register(models.SubscriptionPlan)
 class SubscriptionPlanAdmin(ReadOnlyAdminDateFieldsMIXIN):
+    form = SubscriptionPlanForm
+
     list_display = (
         "pk",
         "name",
@@ -72,7 +113,10 @@ class SubscriptionPlanAdmin(ReadOnlyAdminDateFieldsMIXIN):
         ),
         (
             "Features & Description",
-            {"fields": ("features", "description")},
+            {
+                "fields": ("features", "description"),
+                "description": 'Enter features as a JSON array. Example: ["Unlimited posts", "Advanced analytics", "Priority support"]',
+            },
         ),
     )
 
