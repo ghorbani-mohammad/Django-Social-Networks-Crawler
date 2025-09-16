@@ -1,3 +1,12 @@
+# [1.74.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.73.0...v1.74.0) (2025-09-16)
+
+
+### Features
+
+* **ai:** implement CoverLetter model with CRUD operations, serializers, and premium feature for AI-generated cover letters ([62e5259](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/62e525961dd4e2e5805deab3b9fee625ab3a327e))
+
+
+
 # [1.73.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.72.0...v1.73.0) (2025-09-16)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **settings:** add JWT authentication to REST framework configuration ([b75c829](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/b75c8295bdecfba52c95fc87a5dffa2b02cd859e))
-
-
-
-# [1.71.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.70.2...v1.71.0) (2025-09-11)
-
-
-### Features
-
-* **linkedin:** add source field to Job model with choices for job origin ([b55bedb](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/b55bedbf6c47b116cc585152471c23e29803a329))
 
 
 
