@@ -7,16 +7,18 @@ from rest_framework.decorators import (api_view, authentication_classes,
                                        permission_classes)
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import \
     TokenRefreshView as DRFTokenRefreshView
 
-from .models import Profile
+from .models import FeatureUsage, Profile, Subscription, SubscriptionPlan
 from .serializers import (EmailVerificationConfirmSerializer,
                           EmailVerificationRequestSerializer,
-                          ProfileSerializer, UserRegistrationSerializer,
-                          UserSerializer)
+                          FeatureUsageSerializer, ProfileSerializer,
+                          SubscriptionPlanSerializer, SubscriptionSerializer,
+                          UserRegistrationSerializer, UserSerializer)
 
 User = get_user_model()
 
@@ -221,3 +223,115 @@ def refresh_token(request):
 # Custom TokenRefreshView with explicit authentication
 class TokenRefreshView(DRFTokenRefreshView):
     permission_classes = [AllowAny]
+
+
+class SubscriptionPlansView(APIView):
+    """Get all available subscription plans."""
+
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        plans = SubscriptionPlan.objects.filter(is_active=True).order_by("price")
+        serializer = SubscriptionPlanSerializer(plans, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class UserSubscriptionsView(APIView):
+    """Get user's subscriptions or create a new subscription."""
+
+    authentication_classes = [JWTAuthentication, SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        subscriptions = Subscription.objects.filter(profile=request.user.profile)
+        serializer = SubscriptionSerializer(subscriptions, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        serializer = SubscriptionSerializer(
+            data=request.data, context={"request": request}
+        )
+        if serializer.is_valid():
+            subscription = serializer.save()
+            # In a real implementation, you would integrate with a payment processor here
+            # For now, we'll just activate the subscription
+            subscription.activate()
+            return Response(
+                SubscriptionSerializer(subscription).data,
+                status=status.HTTP_201_CREATED,
+            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CurrentSubscriptionView(APIView):
+    """Get user's current active subscription."""
+
+    authentication_classes = [JWTAuthentication, SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        subscription = request.user.profile.get_active_subscription()
+
+        if subscription:
+            serializer = SubscriptionSerializer(subscription)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(
+                {"message": "No active subscription found"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+
+class CancelSubscriptionView(APIView):
+    """Cancel a user's subscription."""
+
+    authentication_classes = [JWTAuthentication, SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, subscription_id):
+        try:
+            subscription = Subscription.objects.get(
+                id=subscription_id, profile=request.user.profile, is_active=True
+            )
+            subscription.cancel()
+            return Response(
+                {"message": "Subscription cancelled successfully"},
+                status=status.HTTP_200_OK,
+            )
+        except Subscription.DoesNotExist:
+            return Response(
+                {"error": "Subscription not found"}, status=status.HTTP_404_NOT_FOUND
+            )
+
+
+class FeatureUsageView(APIView):
+    """Get user's premium feature usage statistics."""
+
+    authentication_classes = [JWTAuthentication, SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        usage_stats = FeatureUsage.objects.filter(profile=request.user.profile)
+        serializer = FeatureUsageSerializer(usage_stats, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class PremiumStatusView(APIView):
+    """Check if user has premium access and return subscription details."""
+
+    authentication_classes = [JWTAuthentication, SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        profile = request.user.profile
+        has_premium = profile.has_active_premium_subscription()
+        active_subscription = profile.get_active_subscription()
+
+        data = {
+            "has_premium": has_premium,
+            "subscription": SubscriptionSerializer(active_subscription).data
+            if active_subscription
+            else None,
+        }
+
+        return Response(data, status=status.HTTP_200_OK)
