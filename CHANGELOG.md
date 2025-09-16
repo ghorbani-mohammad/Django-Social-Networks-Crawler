@@ -1,3 +1,12 @@
+# [1.73.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.72.0...v1.73.0) (2025-09-16)
+
+
+### Features
+
+* **admin:** add SubscriptionPlan, Subscription, and FeatureUsage admin interfaces with readonly datetime fields ([4113d0e](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/4113d0e19416ed30bf47bdb26311e5b17374b07a))
+
+
+
 # [1.72.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.71.2...v1.72.0) (2025-09-16)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * **linkedin:** add source field to Job model with choices for job origin ([b55bedb](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/b55bedbf6c47b116cc585152471c23e29803a329))
-
-
-
-## [1.70.2](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.70.1...v1.70.2) (2025-09-11)
-
-
-### Bug Fixes
-
-* **auth:** update permission classes for refresh_token and TokenRefreshView to AllowAny ([c05d46f](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/c05d46fe24c084a848415d4819ca8129771feb78))
 
 
 
