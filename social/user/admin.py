@@ -166,6 +166,109 @@ class SubscriptionAdmin(ReadOnlyAdminDateFieldsMIXIN):
     days_remaining_display.short_description = "Days Remaining"
 
 
+@admin.register(models.PaymentInvoice)
+class PaymentInvoiceAdmin(ReadOnlyAdminDateFieldsMIXIN):
+    list_display = (
+        "pk",
+        "order_id",
+        "profile",
+        "subscription_plan_name",
+        "status",
+        "price_amount",
+        "price_currency",
+        "payment_url_display",
+        "is_paid",
+        "created_at",
+    )
+    list_filter = ("status", "price_currency", "created_at")
+    search_fields = (
+        "order_id",
+        "invoice_id",
+        "profile__user__email",
+        "customer_email",
+        "purchase_id",
+    )
+    raw_id_fields = ("profile", "subscription")
+    readonly_fields = (
+        "order_id",
+        "invoice_id",
+        "payment_url",
+        "pay_amount",
+        "pay_currency",
+        "actually_paid",
+        "actually_paid_at_fiat",
+        "purchase_id",
+        "paid_at",
+    )
+
+    fieldsets = (
+        (
+            "Invoice Information",
+            {
+                "fields": (
+                    "profile",
+                    "subscription",
+                    "order_id",
+                    "invoice_id",
+                    "status",
+                )
+            },
+        ),
+        (
+            "Payment Details",
+            {
+                "fields": (
+                    "price_amount",
+                    "price_currency",
+                    "pay_amount",
+                    "pay_currency",
+                    "actually_paid",
+                    "actually_paid_at_fiat",
+                    "payment_url",
+                )
+            },
+        ),
+        (
+            "Timing",
+            {"fields": ("expires_at", "paid_at")},
+        ),
+        (
+            "Customer Information",
+            {"fields": ("customer_email", "order_description")},
+        ),
+        (
+            "Metadata",
+            {"fields": ("purchase_id", "metadata")},
+        ),
+    )
+
+    def subscription_plan_name(self, obj):
+        return obj.subscription.plan.name if obj.subscription else "-"
+
+    subscription_plan_name.short_description = "Plan"
+
+    def payment_url_display(self, obj):
+        if obj.payment_url:
+            return format_html(
+                '<a href="{}" target="_blank">Payment Link</a>', obj.payment_url
+            )
+        return "-"
+
+    payment_url_display.short_description = "Payment URL"
+
+    def is_paid(self, obj):
+        if obj.is_paid():
+            return format_html('<span style="color: green;">✓ Paid</span>')
+        elif obj.is_expired():
+            return format_html('<span style="color: red;">✗ Expired</span>')
+        elif obj.can_be_paid():
+            return format_html('<span style="color: orange;">⏳ Pending</span>')
+        else:
+            return format_html('<span style="color: gray;">- N/A</span>')
+
+    is_paid.short_description = "Payment Status"
+
+
 @admin.register(models.FeatureUsage)
 class FeatureUsageAdmin(ReadOnlyAdminDateFieldsMIXIN):
     list_display = (

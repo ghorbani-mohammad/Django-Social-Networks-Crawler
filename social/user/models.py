@@ -208,6 +208,86 @@ class Subscription(BaseModel):
         self.save()
 
 
+class PaymentInvoice(BaseModel):
+    """Track cryptocurrency payment invoices from NodeJS payment service."""
+
+    STATUS_CHOICES = [
+        ("waiting", "Waiting for Payment"),
+        ("confirming", "Confirming Payment"),
+        ("confirmed", "Payment Confirmed"),
+        ("sending", "Processing Payment"),
+        ("partially_paid", "Partially Paid"),
+        ("finished", "Payment Completed"),
+        ("failed", "Payment Failed"),
+        ("refunded", "Payment Refunded"),
+        ("expired", "Invoice Expired"),
+    ]
+
+    profile = models.ForeignKey(
+        Profile, on_delete=models.CASCADE, related_name="payment_invoices"
+    )
+    subscription = models.ForeignKey(
+        "Subscription",
+        on_delete=models.CASCADE,
+        related_name="payment_invoices",
+        null=True,
+        blank=True,
+    )
+
+    # Payment service fields
+    order_id = models.CharField(max_length=255, unique=True)
+    invoice_id = models.CharField(max_length=255, blank=True, null=True)
+    payment_url = models.URLField(blank=True, null=True)
+
+    # Amount fields
+    price_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    price_currency = models.CharField(max_length=10, default="USD")
+    pay_amount = models.DecimalField(
+        max_digits=20, decimal_places=8, null=True, blank=True
+    )
+    pay_currency = models.CharField(max_length=10, blank=True, null=True)
+    actually_paid = models.DecimalField(
+        max_digits=20, decimal_places=8, null=True, blank=True
+    )
+    actually_paid_at_fiat = models.DecimalField(
+        max_digits=10, decimal_places=2, null=True, blank=True
+    )
+
+    # Status and metadata
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="waiting")
+    purchase_id = models.CharField(max_length=255, blank=True, null=True)
+    expires_at = models.DateTimeField(null=True, blank=True)
+    paid_at = models.DateTimeField(null=True, blank=True)
+
+    # Additional metadata
+    customer_email = models.EmailField()
+    order_description = models.TextField()
+    metadata = models.JSONField(default=dict, blank=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"Invoice {self.order_id} - {self.status} (${self.price_amount})"
+
+    def is_paid(self):
+        """Check if invoice is paid successfully."""
+        return self.status == "finished"
+
+    def is_expired(self):
+        """Check if invoice is expired."""
+        if not self.expires_at:
+            return False
+        return timezone.now() > self.expires_at
+
+    def can_be_paid(self):
+        """Check if invoice can still be paid."""
+        return (
+            self.status in ["waiting", "confirming", "confirmed", "partially_paid"]
+            and not self.is_expired()
+        )
+
+
 class FeatureUsage(BaseModel):
     """Track premium feature usage for users."""
 

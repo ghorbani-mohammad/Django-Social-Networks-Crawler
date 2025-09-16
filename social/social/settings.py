@@ -267,3 +267,9 @@ REST_FRAMEWORK = {
 # Media files
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+# Coin Payment Service Configuration
+COIN_PAYMENT_BASE_URL = env.str(
+    "COIN_PAYMENT_BASE_URL", default="https://coin-payment.m-gh.com"
+)
+COIN_PAYMENT_API_SECRET = env.str("COIN_PAYMENT_API_SECRET", default="")

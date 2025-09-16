@@ -11,12 +11,15 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import \
     TokenRefreshView as DRFTokenRefreshView
 
-from .models import FeatureUsage, Profile, Subscription, SubscriptionPlan
+from .models import (FeatureUsage, PaymentInvoice, Profile, Subscription,
+                     SubscriptionPlan)
 from .serializers import (EmailVerificationConfirmSerializer,
                           EmailVerificationRequestSerializer,
-                          FeatureUsageSerializer, ProfileSerializer,
-                          SubscriptionPlanSerializer, SubscriptionSerializer,
-                          UserRegistrationSerializer, UserSerializer)
+                          FeatureUsageSerializer, PaymentInvoiceSerializer,
+                          ProfileSerializer, SubscriptionPlanSerializer,
+                          SubscriptionSerializer, UserRegistrationSerializer,
+                          UserSerializer)
+from .services import PaymentServiceError, payment_service
 
 User = get_user_model()
 
@@ -278,13 +281,33 @@ class UserSubscriptionsView(APIView):
         )
         if serializer.is_valid():
             subscription = serializer.save()
-            # In a real implementation, you would integrate with a payment processor here
-            # For now, we'll just activate the subscription
-            subscription.activate()
-            return Response(
-                SubscriptionSerializer(subscription).data,
-                status=status.HTTP_201_CREATED,
-            )
+
+            try:
+                # Create payment invoice using the payment service
+                payment_invoice = payment_service.create_invoice(
+                    profile=request.user.profile,
+                    subscription=subscription,
+                    price_amount=subscription.plan.price,
+                    price_currency="USD",
+                )
+
+                return Response(
+                    {
+                        "message": "Subscription created. Please complete payment.",
+                        "subscription": SubscriptionSerializer(subscription).data,
+                        "payment": PaymentInvoiceSerializer(payment_invoice).data,
+                    },
+                    status=status.HTTP_201_CREATED,
+                )
+
+            except PaymentServiceError as e:
+                # If payment service fails, delete the subscription and return error
+                subscription.delete()
+                return Response(
+                    {"error": f"Payment service error: {str(e)}"},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                )
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -360,3 +383,122 @@ class PremiumStatusView(APIView):
         }
 
         return Response(data, status=status.HTTP_200_OK)
+
+
+class PaymentInvoicesView(APIView):
+    """Get user's payment invoices."""
+
+    authentication_classes = [JWTAuthentication, SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        invoices = PaymentInvoice.objects.filter(profile=request.user.profile)
+        serializer = PaymentInvoiceSerializer(invoices, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class PaymentInvoiceDetailView(APIView):
+    """Get specific payment invoice details."""
+
+    authentication_classes = [JWTAuthentication, SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, invoice_id):
+        try:
+            invoice = PaymentInvoice.objects.get(
+                id=invoice_id, profile=request.user.profile
+            )
+
+            # Try to get updated status from payment service
+            try:
+                payment_status = payment_service.get_invoice_status(invoice.order_id)
+                if payment_status and payment_status.get("status"):
+                    # Update local status if different
+                    if invoice.status != payment_status["status"]:
+                        invoice.status = payment_status["status"]
+                        invoice.save()
+            except PaymentServiceError:
+                pass  # Continue with local data if service is unavailable
+
+            serializer = PaymentInvoiceSerializer(invoice)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        except PaymentInvoice.DoesNotExist:
+            return Response(
+                {"error": "Payment invoice not found"}, status=status.HTTP_404_NOT_FOUND
+            )
+
+
+class PaymentWebhookView(APIView):
+    """Handle payment webhook notifications from NodeJS payment service."""
+
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        """Process payment webhook."""
+        try:
+            webhook_data = request.data
+
+            # Process the webhook data
+            success = payment_service.process_webhook_data(webhook_data)
+
+            if success:
+                return Response(
+                    {"message": "Webhook processed successfully"},
+                    status=status.HTTP_200_OK,
+                )
+            else:
+                return Response(
+                    {"error": "Failed to process webhook"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+        except Exception as e:
+            return Response(
+                {"error": f"Webhook processing error: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+
+class PaymentStatusView(APIView):
+    """Check payment status and service health."""
+
+    authentication_classes = [JWTAuthentication, SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        """Get payment service status and user's pending payments."""
+        try:
+            # Get user's pending payment invoices
+            pending_invoices = PaymentInvoice.objects.filter(
+                profile=request.user.profile,
+                status__in=["waiting", "confirming", "confirmed", "partially_paid"],
+            )
+
+            # Get service status
+            try:
+                balance = payment_service.get_account_balance()
+                currencies = payment_service.get_supported_currencies()
+                service_available = True
+            except PaymentServiceError:
+                balance = None
+                currencies = None
+                service_available = False
+
+            return Response(
+                {
+                    "service_available": service_available,
+                    "pending_payments": PaymentInvoiceSerializer(
+                        pending_invoices, many=True
+                    ).data,
+                    "supported_currencies": currencies,
+                    "service_balance": balance,
+                },
+                status=status.HTTP_200_OK,
+            )
+
+        except Exception as e:
+            return Response(
+                {"error": f"Status check failed: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
