@@ -1,3 +1,12 @@
+# [1.72.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.71.2...v1.72.0) (2025-09-16)
+
+
+### Features
+
+* **user:** add subscription and feature usage models ([8a93282](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/8a932824213aee2d53bce53b9779bc14126a13d4))
+
+
+
 ## [1.71.2](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.71.1...v1.71.2) (2025-09-12)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **auth:** update permission classes for refresh_token and TokenRefreshView to AllowAny ([c05d46f](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/c05d46fe24c084a848415d4819ca8129771feb78))
-
-
-
-## [1.70.1](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.70.0...v1.70.1) (2025-09-10)
-
-
-### Bug Fixes
-
-* **profile:** change cell_number field from SlugField to CharField with increased max_length ([6a97249](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/6a97249d1a04f3d31da499e1a61ff1be8a8aa328))
 
 
 
