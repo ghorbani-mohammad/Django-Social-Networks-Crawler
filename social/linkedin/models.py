@@ -158,7 +158,7 @@ class Job(BaseModel):
         max_length=20,
         choices=SOURCE_CHOICES,
         default=LINKEDIN,
-        help_text="The source website where this job was found"
+        help_text="The source website where this job was found",
     )
 
     # Basic job fields
