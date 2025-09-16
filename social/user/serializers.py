@@ -2,7 +2,8 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from .models import FeatureUsage, Profile, Subscription, SubscriptionPlan
+from .models import (FeatureUsage, PaymentInvoice, Profile, Subscription,
+                     SubscriptionPlan)
 
 User = get_user_model()
 
@@ -185,6 +186,69 @@ class SubscriptionSerializer(serializers.ModelSerializer):
         validated_data["profile"] = self.context["request"].user.profile
 
         return super().create(validated_data)
+
+
+class PaymentInvoiceSerializer(serializers.ModelSerializer):
+    """Serializer for payment invoices."""
+
+    subscription_plan_name = serializers.CharField(
+        source="subscription.plan.name", read_only=True
+    )
+    is_paid = serializers.SerializerMethodField()
+    is_expired = serializers.SerializerMethodField()
+    can_be_paid = serializers.SerializerMethodField()
+
+    class Meta:
+        model = PaymentInvoice
+        fields = [
+            "id",
+            "order_id",
+            "invoice_id",
+            "payment_url",
+            "price_amount",
+            "price_currency",
+            "pay_amount",
+            "pay_currency",
+            "actually_paid",
+            "actually_paid_at_fiat",
+            "status",
+            "purchase_id",
+            "expires_at",
+            "paid_at",
+            "customer_email",
+            "order_description",
+            "subscription_plan_name",
+            "is_paid",
+            "is_expired",
+            "can_be_paid",
+            "created_at",
+            "updated_at",
+        ]
+        read_only_fields = [
+            "id",
+            "profile",
+            "subscription",
+            "order_id",
+            "invoice_id",
+            "payment_url",
+            "pay_amount",
+            "pay_currency",
+            "actually_paid",
+            "actually_paid_at_fiat",
+            "purchase_id",
+            "paid_at",
+            "created_at",
+            "updated_at",
+        ]
+
+    def get_is_paid(self, obj):
+        return obj.is_paid()
+
+    def get_is_expired(self, obj):
+        return obj.is_expired()
+
+    def get_can_be_paid(self, obj):
+        return obj.can_be_paid()
 
 
 class FeatureUsageSerializer(serializers.ModelSerializer):

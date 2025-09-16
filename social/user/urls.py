@@ -43,4 +43,19 @@ urlpatterns = [
     ),
     path("feature-usage/", views.FeatureUsageView.as_view(), name="feature_usage"),
     path("premium-status/", views.PremiumStatusView.as_view(), name="premium_status"),
+    # Payment endpoints
+    path(
+        "payments/invoices/",
+        views.PaymentInvoicesView.as_view(),
+        name="payment_invoices",
+    ),
+    path(
+        "payments/invoices/<int:invoice_id>/",
+        views.PaymentInvoiceDetailView.as_view(),
+        name="payment_invoice_detail",
+    ),
+    path(
+        "payments/webhook/", views.PaymentWebhookView.as_view(), name="payment_webhook"
+    ),
+    path("payments/status/", views.PaymentStatusView.as_view(), name="payment_status"),
 ]
