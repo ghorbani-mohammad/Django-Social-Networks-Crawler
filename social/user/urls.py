@@ -10,7 +10,11 @@ urlpatterns = [
         views.RequestEmailVerificationView.as_view(),
         name="request_email_verification",
     ),
-    path("auth/verify-email/", views.VerifyEmailCodeView.as_view(), name="verify_email_code"),
+    path(
+        "auth/verify-email/",
+        views.VerifyEmailCodeView.as_view(),
+        name="verify_email_code",
+    ),
     path("auth/register/", views.RegisterUserView.as_view(), name="register_user"),
     path("auth/refresh/", views.RefreshTokenView.as_view(), name="refresh_token"),
     path("auth/token/refresh/", views.TokenRefreshView.as_view(), name="token_refresh"),
