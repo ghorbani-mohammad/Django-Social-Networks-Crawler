@@ -16,4 +16,27 @@ urlpatterns = [
     path("auth/token/refresh/", views.TokenRefreshView.as_view(), name="token_refresh"),
     path("profile/", views.user_profile, name="user_profile"),
     path("profile/detail/", views.profile_detail, name="profile_detail"),
+    # Subscription endpoints
+    path(
+        "subscriptions/plans/",
+        views.SubscriptionPlansView.as_view(),
+        name="subscription_plans",
+    ),
+    path(
+        "subscriptions/",
+        views.UserSubscriptionsView.as_view(),
+        name="user_subscriptions",
+    ),
+    path(
+        "subscriptions/current/",
+        views.CurrentSubscriptionView.as_view(),
+        name="current_subscription",
+    ),
+    path(
+        "subscriptions/<int:subscription_id>/cancel/",
+        views.CancelSubscriptionView.as_view(),
+        name="cancel_subscription",
+    ),
+    path("feature-usage/", views.FeatureUsageView.as_view(), name="feature_usage"),
+    path("premium-status/", views.PremiumStatusView.as_view(), name="premium_status"),
 ]

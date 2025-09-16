@@ -6,6 +6,7 @@ urlpatterns = [
     path("api/v1/soc/", include("network.urls")),
     path("api/v1/linkedin/", include("linkedin.urls")),
     path("api/v1/user/", include("user.urls")),
+    path("api/v1/ai/", include("ai.urls")),
 ]
 
 admin.site.index_title = "Social"
