@@ -77,7 +77,9 @@ class JobSerializer(serializers.ModelSerializer):
                                     # Force HTTPS scheme for image URLs
                                     absolute_uri = request.build_absolute_uri(url)
                                     if absolute_uri.startswith("http://"):
-                                        return absolute_uri.replace("http://", "https://", 1)
+                                        return absolute_uri.replace(
+                                            "http://", "https://", 1
+                                        )
                                     return absolute_uri
                                 return url
         return None
