@@ -289,6 +289,9 @@ class UserSubscriptionsView(APIView):
                     subscription=subscription,
                     price_amount=subscription.plan.price,
                     price_currency="USD",
+                    success_url=request.data.get("success_url"),
+                    cancel_url=request.data.get("cancel_url"),
+                    failure_url=request.data.get("failure_url"),
                 )
 
                 return Response(
