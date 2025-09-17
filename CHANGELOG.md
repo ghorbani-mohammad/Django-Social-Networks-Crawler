@@ -1,3 +1,12 @@
+# [1.76.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.75.0...v1.76.0) (2025-09-17)
+
+
+### Features
+
+* **user:** add support for redirect URLs in payment invoice creation ([ec04f9d](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/ec04f9df2b1efd1f690bc4df78d825e1c0c198d3))
+
+
+
 # [1.75.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.74.0...v1.75.0) (2025-09-16)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * **user:** add subscription and feature usage models ([8a93282](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/8a932824213aee2d53bce53b9779bc14126a13d4))
-
-
-
-## [1.71.2](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.71.1...v1.71.2) (2025-09-12)
-
-
-### Bug Fixes
-
-* **settings:** move JWT settings to the correct location in settings.py ([2df896c](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/2df896c37c8b337c5b15e3e406d72ee9625930fe))
 
 
 
