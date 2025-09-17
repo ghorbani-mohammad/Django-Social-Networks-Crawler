@@ -62,6 +62,9 @@ class CoinPaymentService:
         subscription: Subscription,
         price_amount: Decimal,
         price_currency: str = "USD",
+        success_url: str = None,
+        cancel_url: str = None,
+        failure_url: str = None,
     ) -> PaymentInvoice:
         """Create a payment invoice for a subscription."""
 
@@ -76,6 +79,14 @@ class CoinPaymentService:
             "orderDescription": f"Subscription: {subscription.plan.name} ({subscription.plan.get_plan_type_display()})",
             "customerEmail": profile.user.email,
         }
+
+        # Add redirect URLs if provided
+        if success_url:
+            invoice_data["successUrl"] = success_url
+        if cancel_url:
+            invoice_data["cancelUrl"] = cancel_url
+        if failure_url:
+            invoice_data["failureUrl"] = failure_url
 
         # Make API request
         response_data = self._make_request(
