@@ -1,3 +1,12 @@
+# [1.77.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.76.0...v1.77.0) (2025-09-18)
+
+
+### Features
+
+* **subscription:** enhance cancellation process to include payment invoice handling ([6b54750](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/6b547508bcaa48df28c7c7eb75d0f3c335d2e6a5))
+
+
+
 # [1.76.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.75.0...v1.76.0) (2025-09-17)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * **admin:** add SubscriptionPlan, Subscription, and FeatureUsage admin interfaces with readonly datetime fields ([4113d0e](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/4113d0e19416ed30bf47bdb26311e5b17374b07a))
-
-
-
-# [1.72.0](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/compare/v1.71.2...v1.72.0) (2025-09-16)
-
-
-### Features
-
-* **user:** add subscription and feature usage models ([8a93282](https://github.com/ghorbani-mohammad/Django-Social-Networks-Crawler/commit/8a932824213aee2d53bce53b9779bc14126a13d4))
 
 
 
