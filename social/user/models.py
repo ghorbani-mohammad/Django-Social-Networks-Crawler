@@ -206,7 +206,7 @@ class Subscription(BaseModel):
         self.is_active = False
         self.status = "cancelled"
         self.save()
-        
+
         # Cancel any pending payment invoices for this subscription
         pending_invoices = self.payment_invoices.filter(
             status__in=["waiting", "confirming", "confirmed", "partially_paid"]
@@ -304,19 +304,20 @@ class PaymentInvoice(BaseModel):
         if self.can_be_cancelled():
             # Try to cancel via payment service first
             from .services import payment_service
+
             try:
                 payment_service.cancel_invoice(self.order_id)
             except Exception:
                 # Continue with local cancellation even if service call fails
                 pass
-            
+
             self.status = "cancelled"
             self.save()
-            
+
             # Cancel associated subscription if it exists and is still pending
             if self.subscription and self.subscription.status == "pending":
                 self.subscription.cancel()
-            
+
             return True
         return False
 
