@@ -328,8 +328,8 @@ class CurrentSubscriptionView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(
-                {"message": "No active subscription found"},
-                status=status.HTTP_404_NOT_FOUND,
+                {"subscription": None, "message": "No active subscription found"},
+                status=status.HTTP_200_OK,
             )
 
 
@@ -344,19 +344,21 @@ class CancelSubscriptionView(APIView):
             subscription = Subscription.objects.get(
                 id=subscription_id, profile=request.user.profile, is_active=True
             )
-            
+
             # Cancel the subscription (this will also cancel associated payment invoices)
             subscription.cancel()
-            
+
             # Get count of cancelled payment invoices for response
             cancelled_invoices_count = subscription.payment_invoices.filter(
                 status="expired"
             ).count()
-            
+
             response_message = "Subscription cancelled successfully"
             if cancelled_invoices_count > 0:
-                response_message += f" and {cancelled_invoices_count} pending payment(s) cancelled"
-            
+                response_message += (
+                    f" and {cancelled_invoices_count} pending payment(s) cancelled"
+                )
+
             return Response(
                 {"message": response_message},
                 status=status.HTTP_200_OK,
@@ -367,8 +369,8 @@ class CancelSubscriptionView(APIView):
             )
         except Exception as e:
             return Response(
-                {"error": f"Failed to cancel subscription: {str(e)}"}, 
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                {"error": f"Failed to cancel subscription: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
 
@@ -502,8 +504,7 @@ class CancelPaymentInvoiceView(APIView):
 
             # Store subscription info before cancellation
             subscription_cancelled = (
-                invoice.subscription and 
-                invoice.subscription.status == "pending"
+                invoice.subscription and invoice.subscription.status == "pending"
             )
 
             # Cancel the invoice
@@ -513,7 +514,7 @@ class CancelPaymentInvoiceView(APIView):
                 response_message = "Payment cancelled successfully"
                 if subscription_cancelled:
                     response_message += " and associated subscription cancelled"
-                
+
                 return Response(
                     {"message": response_message},
                     status=status.HTTP_200_OK,
