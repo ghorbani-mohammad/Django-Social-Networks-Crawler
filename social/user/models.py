@@ -202,10 +202,17 @@ class Subscription(BaseModel):
         self.save()
 
     def cancel(self):
-        """Cancel the subscription."""
+        """Cancel the subscription and associated payment invoices."""
         self.is_active = False
         self.status = "cancelled"
         self.save()
+        
+        # Cancel any pending payment invoices for this subscription
+        pending_invoices = self.payment_invoices.filter(
+            status__in=["waiting", "confirming", "confirmed", "partially_paid"]
+        )
+        for invoice in pending_invoices:
+            invoice.cancel()
 
 
 class PaymentInvoice(BaseModel):
@@ -286,6 +293,26 @@ class PaymentInvoice(BaseModel):
             self.status in ["waiting", "confirming", "confirmed", "partially_paid"]
             and not self.is_expired()
         )
+
+    def can_be_cancelled(self):
+        """Check if invoice can be cancelled."""
+        return self.status in ["waiting", "confirming", "confirmed", "partially_paid"]
+
+    def cancel(self):
+        """Cancel the payment invoice."""
+        if self.can_be_cancelled():
+            # Try to cancel via payment service first
+            from .services import payment_service
+            try:
+                payment_service.cancel_invoice(self.order_id)
+            except Exception:
+                # Continue with local cancellation even if service call fails
+                pass
+            
+            self.status = "expired"
+            self.save()
+            return True
+        return False
 
 
 class FeatureUsage(BaseModel):
