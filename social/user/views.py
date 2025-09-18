@@ -500,12 +500,22 @@ class CancelPaymentInvoiceView(APIView):
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 
+            # Store subscription info before cancellation
+            subscription_cancelled = (
+                invoice.subscription and 
+                invoice.subscription.status == "pending"
+            )
+
             # Cancel the invoice
             success = invoice.cancel()
 
             if success:
+                response_message = "Payment cancelled successfully"
+                if subscription_cancelled:
+                    response_message += " and associated subscription cancelled"
+                
                 return Response(
-                    {"message": "Payment cancelled successfully"},
+                    {"message": response_message},
                     status=status.HTTP_200_OK,
                 )
             else:
