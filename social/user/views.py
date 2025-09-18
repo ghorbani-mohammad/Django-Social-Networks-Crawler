@@ -433,7 +433,7 @@ class PaymentInvoiceDetailView(APIView):
 
             # Try to get updated status from payment service
             try:
-                payment_status = payment_service.get_invoice_status(invoice.invoice_id)
+                payment_status = payment_service.get_invoice_status(invoice.order_id)
                 if payment_status and payment_status.get("status"):
                     # Update local status if different
                     if invoice.status != payment_status["status"]:
