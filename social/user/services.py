@@ -146,16 +146,15 @@ class CoinPaymentService:
 
         return payment_invoice
 
-    def get_invoice_status(self, order_id: str) -> Optional[Dict]:
+    def get_invoice_status(self, order_id: str) -> Dict:
         """Get invoice status by order ID."""
         try:
             response_data = self._make_request(
                 "GET", "/api/payment/invoices", {"orderId": order_id}
             )
+            print(response_data)
 
-            if response_data.get("success") and response_data.get("data"):
-                invoices = response_data["data"]
-                return invoices[0] if invoices else None
+            return response_data
 
         except PaymentServiceError:
             pass

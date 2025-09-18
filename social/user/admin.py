@@ -287,27 +287,7 @@ class PaymentInvoiceAdmin(ReadOnlyAdminDateFieldsMIXIN):
                 if status_data:
                     # Update invoice with fresh data from payment service
                     old_status = invoice.status
-
-                    invoice.invoice_id = status_data.get(
-                        "invoiceId", invoice.invoice_id
-                    )
                     invoice.status = status_data.get("status", invoice.status)
-                    invoice.pay_amount = status_data.get(
-                        "payAmount", invoice.pay_amount
-                    )
-                    invoice.pay_currency = status_data.get(
-                        "payCurrency", invoice.pay_currency
-                    )
-                    invoice.actually_paid = status_data.get(
-                        "actuallyPaid", invoice.actually_paid
-                    )
-                    invoice.actually_paid_at_fiat = status_data.get(
-                        "actuallyPaidAtFiat", invoice.actually_paid_at_fiat
-                    )
-                    invoice.purchase_id = status_data.get(
-                        "purchaseId", invoice.purchase_id
-                    )
-
                     # Update metadata with sync information
                     invoice.metadata.update(
                         {
