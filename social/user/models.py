@@ -306,7 +306,7 @@ class PaymentInvoice(BaseModel):
             from .services import payment_service
 
             try:
-                payment_service.cancel_invoice(self.order_id)
+                payment_service.cancel_invoice(self.invoice_id)
             except Exception:
                 # Continue with local cancellation even if service call fails
                 pass

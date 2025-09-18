@@ -27,7 +27,9 @@ class CoinPaymentService:
     @property
     def base_url(self):
         if self._base_url is None:
-            self._base_url = getattr(settings, "COIN_PAYMENT_BASE_URL", "https://coin-payment.m-gh.com")
+            self._base_url = getattr(
+                settings, "COIN_PAYMENT_BASE_URL", "https://coin-payment.m-gh.com"
+            )
         return self._base_url
 
     @property
@@ -146,11 +148,11 @@ class CoinPaymentService:
 
         return payment_invoice
 
-    def get_invoice_status(self, order_id: str) -> Optional[Dict]:
-        """Get invoice status by order ID."""
+    def get_invoice_status(self, invoice_id: str) -> Optional[Dict]:
+        """Get invoice status by invoice ID."""
         try:
             response_data = self._make_request(
-                "GET", "/api/payment/invoices", {"orderId": order_id}
+                "GET", "/api/payment/invoices", {"invoiceId": invoice_id}
             )
 
             if response_data.get("success") and response_data.get("data"):
@@ -252,23 +254,23 @@ class CoinPaymentService:
             print(f"Error processing webhook data: {str(e)}")
             return False
 
-    def cancel_invoice(self, order_id: str) -> bool:
+    def cancel_invoice(self, invoice_id: str) -> bool:
         """Cancel a payment invoice via the payment service."""
         try:
             response_data = self._make_request(
-                "POST", "/api/payment/cancel-invoice", {"orderId": order_id}
+                "POST", "/api/payment/cancel-invoice", {"invoiceId": invoice_id}
             )
 
             if response_data.get("success"):
                 return True
             else:
                 print(
-                    f"Failed to cancel invoice {order_id}: {response_data.get('message', 'Unknown error')}"
+                    f"Failed to cancel invoice {invoice_id}: {response_data.get('message', 'Unknown error')}"
                 )
                 return False
 
         except PaymentServiceError as e:
-            print(f"Error cancelling invoice {order_id}: {str(e)}")
+            print(f"Error cancelling invoice {invoice_id}: {str(e)}")
             return False
 
 
