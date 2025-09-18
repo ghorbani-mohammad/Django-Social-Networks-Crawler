@@ -55,6 +55,11 @@ urlpatterns = [
         name="payment_invoice_detail",
     ),
     path(
+        "payments/invoices/<int:invoice_id>/cancel/",
+        views.CancelPaymentInvoiceView.as_view(),
+        name="cancel_payment_invoice",
+    ),
+    path(
         "payments/webhook/", views.PaymentWebhookView.as_view(), name="payment_webhook"
     ),
     path("payments/status/", views.PaymentStatusView.as_view(), name="payment_status"),

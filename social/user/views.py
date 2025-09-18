@@ -480,6 +480,52 @@ class PaymentWebhookView(APIView):
             )
 
 
+class CancelPaymentInvoiceView(APIView):
+    """Cancel a specific payment invoice."""
+
+    authentication_classes = [JWTAuthentication, SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, invoice_id):
+        """Cancel a payment invoice."""
+        try:
+            invoice = PaymentInvoice.objects.get(
+                id=invoice_id, profile=request.user.profile
+            )
+
+            # Check if invoice can be cancelled
+            if not invoice.can_be_cancelled():
+                return Response(
+                    {"error": "This payment cannot be cancelled"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+            # Cancel the invoice
+            success = invoice.cancel()
+
+            if success:
+                return Response(
+                    {"message": "Payment cancelled successfully"},
+                    status=status.HTTP_200_OK,
+                )
+            else:
+                return Response(
+                    {"error": "Failed to cancel payment"},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                )
+
+        except PaymentInvoice.DoesNotExist:
+            return Response(
+                {"error": "Payment invoice not found"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        except Exception as e:
+            return Response(
+                {"error": f"Failed to cancel payment: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+
 class PaymentStatusView(APIView):
     """Check payment status and service health."""
 
