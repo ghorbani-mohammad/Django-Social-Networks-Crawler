@@ -282,6 +282,7 @@ class PaymentInvoiceAdmin(ReadOnlyAdminDateFieldsMIXIN):
             try:
                 # Get status from payment service
                 status_data = payment_service.get_invoice_status(invoice.order_id)
+                print(status_data)
 
                 if status_data:
                     # Update invoice with fresh data from payment service
