@@ -1,11 +1,13 @@
 import json
 
 from django import forms
-from django.contrib import admin
+from django.contrib import admin, messages
+from django.utils import timezone
 from django.utils.html import format_html
 
 from reusable.admins import ReadOnlyAdminDateFieldsMIXIN
 from . import models
+from .services import payment_service
 
 
 class SubscriptionPlanForm(forms.ModelForm):
@@ -200,6 +202,7 @@ class PaymentInvoiceAdmin(ReadOnlyAdminDateFieldsMIXIN):
         "purchase_id",
         "paid_at",
     )
+    actions = ["check_payment_status"]
 
     fieldsets = (
         (
@@ -267,6 +270,98 @@ class PaymentInvoiceAdmin(ReadOnlyAdminDateFieldsMIXIN):
             return format_html('<span style="color: gray;">- N/A</span>')
 
     is_paid.short_description = "Payment Status"
+
+    def check_payment_status(self, request, queryset):
+        """
+        Admin action to check payment status from third-party service and update local records.
+        """
+        updated_count = 0
+        error_count = 0
+
+        for invoice in queryset:
+            try:
+                # Get status from payment service
+                status_data = payment_service.get_invoice_status(invoice.order_id)
+                print(status_data)
+
+                if status_data:
+                    # Update invoice with fresh data from payment service
+                    old_status = invoice.status
+
+                    invoice.invoice_id = status_data.get(
+                        "invoiceId", invoice.invoice_id
+                    )
+                    invoice.status = status_data.get("status", invoice.status)
+                    invoice.pay_amount = status_data.get(
+                        "payAmount", invoice.pay_amount
+                    )
+                    invoice.pay_currency = status_data.get(
+                        "payCurrency", invoice.pay_currency
+                    )
+                    invoice.actually_paid = status_data.get(
+                        "actuallyPaid", invoice.actually_paid
+                    )
+                    invoice.actually_paid_at_fiat = status_data.get(
+                        "actuallyPaidAtFiat", invoice.actually_paid_at_fiat
+                    )
+                    invoice.purchase_id = status_data.get(
+                        "purchaseId", invoice.purchase_id
+                    )
+
+                    # Update metadata with sync information
+                    invoice.metadata.update(
+                        {
+                            "last_sync_at": timezone.now().isoformat(),
+                            "sync_source": "admin_action",
+                            "previous_status": old_status,
+                        }
+                    )
+
+                    # If payment is finished, mark as paid and activate subscription
+                    if status_data.get("status") == "finished" and not invoice.paid_at:
+                        invoice.paid_at = timezone.now()
+
+                        # Activate the subscription if it exists
+                        if (
+                            invoice.subscription
+                            and invoice.subscription.status == "pending"
+                        ):
+                            invoice.subscription.activate()
+
+                            # Update subscription payment reference
+                            invoice.subscription.payment_reference = (
+                                invoice.purchase_id or invoice.invoice_id
+                            )
+                            invoice.subscription.save()
+
+                    invoice.save()
+                    updated_count += 1
+                else:
+                    error_count += 1
+
+            except Exception as e:
+                error_count += 1
+                # Log the error but continue with other invoices
+                print(f"Error checking status for invoice {invoice.order_id}: {str(e)}")
+
+        # Show results to admin
+        if updated_count > 0:
+            self.message_user(
+                request,
+                f"Successfully updated {updated_count} payment invoice(s).",
+                messages.SUCCESS,
+            )
+
+        if error_count > 0:
+            self.message_user(
+                request,
+                f"Failed to update {error_count} payment invoice(s). Check logs for details.",
+                messages.WARNING,
+            )
+
+    check_payment_status.short_description = (
+        "Check payment status from third-party service"
+    )
 
 
 @admin.register(models.FeatureUsage)
