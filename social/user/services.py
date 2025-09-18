@@ -240,6 +240,23 @@ class CoinPaymentService:
             print(f"Error processing webhook data: {str(e)}")
             return False
 
+    def cancel_invoice(self, order_id: str) -> bool:
+        """Cancel a payment invoice via the payment service."""
+        try:
+            response_data = self._make_request(
+                "POST", "/api/payment/cancel-invoice", {"orderId": order_id}
+            )
+            
+            if response_data.get("success"):
+                return True
+            else:
+                print(f"Failed to cancel invoice {order_id}: {response_data.get('message', 'Unknown error')}")
+                return False
+                
+        except PaymentServiceError as e:
+            print(f"Error cancelling invoice {order_id}: {str(e)}")
+            return False
+
 
 # Singleton instance
 payment_service = CoinPaymentService()

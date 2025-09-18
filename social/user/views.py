@@ -344,14 +344,31 @@ class CancelSubscriptionView(APIView):
             subscription = Subscription.objects.get(
                 id=subscription_id, profile=request.user.profile, is_active=True
             )
+            
+            # Cancel the subscription (this will also cancel associated payment invoices)
             subscription.cancel()
+            
+            # Get count of cancelled payment invoices for response
+            cancelled_invoices_count = subscription.payment_invoices.filter(
+                status="expired"
+            ).count()
+            
+            response_message = "Subscription cancelled successfully"
+            if cancelled_invoices_count > 0:
+                response_message += f" and {cancelled_invoices_count} pending payment(s) cancelled"
+            
             return Response(
-                {"message": "Subscription cancelled successfully"},
+                {"message": response_message},
                 status=status.HTTP_200_OK,
             )
         except Subscription.DoesNotExist:
             return Response(
                 {"error": "Subscription not found"}, status=status.HTTP_404_NOT_FOUND
+            )
+        except Exception as e:
+            return Response(
+                {"error": f"Failed to cancel subscription: {str(e)}"}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
 
