@@ -228,6 +228,7 @@ class PaymentInvoice(BaseModel):
         ("failed", "Payment Failed"),
         ("refunded", "Payment Refunded"),
         ("expired", "Invoice Expired"),
+        ("cancelled", "Payment Cancelled"),
     ]
 
     profile = models.ForeignKey(
@@ -299,7 +300,7 @@ class PaymentInvoice(BaseModel):
         return self.status in ["waiting", "confirming", "confirmed", "partially_paid"]
 
     def cancel(self):
-        """Cancel the payment invoice."""
+        """Cancel the payment invoice and associated subscription if applicable."""
         if self.can_be_cancelled():
             # Try to cancel via payment service first
             from .services import payment_service
@@ -309,8 +310,13 @@ class PaymentInvoice(BaseModel):
                 # Continue with local cancellation even if service call fails
                 pass
             
-            self.status = "expired"
+            self.status = "cancelled"
             self.save()
+            
+            # Cancel associated subscription if it exists and is still pending
+            if self.subscription and self.subscription.status == "pending":
+                self.subscription.cancel()
+            
             return True
         return False
 
