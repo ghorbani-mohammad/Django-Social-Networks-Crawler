@@ -281,7 +281,7 @@ class PaymentInvoiceAdmin(ReadOnlyAdminDateFieldsMIXIN):
         for invoice in queryset:
             try:
                 # Get status from payment service
-                status_data = payment_service.get_invoice_status(invoice.invoice_id)
+                status_data = payment_service.get_invoice_status(invoice.order_id)
                 print(status_data)
 
                 if status_data:
