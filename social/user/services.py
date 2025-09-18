@@ -20,9 +20,21 @@ class CoinPaymentService:
     """Service class for interacting with NodeJS Coin Payment API."""
 
     def __init__(self):
-        self.base_url = getattr(settings, "COIN_PAYMENT_BASE_URL")
-        self.api_secret = getattr(settings, "COIN_PAYMENT_API_SECRET")
+        self._base_url = None
+        self._api_secret = None
         self.timeout = 30
+
+    @property
+    def base_url(self):
+        if self._base_url is None:
+            self._base_url = getattr(settings, "COIN_PAYMENT_BASE_URL", "https://coin-payment.m-gh.com")
+        return self._base_url
+
+    @property
+    def api_secret(self):
+        if self._api_secret is None:
+            self._api_secret = getattr(settings, "COIN_PAYMENT_API_SECRET", "")
+        return self._api_secret
 
     def _make_request(
         self, method: str, endpoint: str, data: Optional[Dict] = None
