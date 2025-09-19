@@ -20,7 +20,7 @@ from .serializers import (EmailVerificationConfirmSerializer,
                           ProfileSerializer, SubscriptionPlanSerializer,
                           SubscriptionSerializer, UserRegistrationSerializer,
                           UserSerializer)
-from .services import PaymentServiceError, payment_service
+from .services import payment_service
 from network.views import ListPagination
 
 User = get_user_model()
@@ -305,7 +305,7 @@ class UserSubscriptionsView(APIView):
                     status=status.HTTP_201_CREATED,
                 )
 
-            except PaymentServiceError as e:
+            except Exception as e:
                 # If payment service fails, delete the subscription and return error
                 subscription.delete()
                 return Response(
@@ -451,7 +451,7 @@ class PaymentInvoiceDetailView(APIView):
                     if invoice.status != payment_status["status"]:
                         invoice.status = payment_status["status"]
                         invoice.save()
-            except PaymentServiceError:
+            except Exception:
                 pass  # Continue with local data if service is unavailable
 
             serializer = PaymentInvoiceSerializer(invoice)
@@ -569,7 +569,7 @@ class PaymentStatusView(APIView):
                 balance = payment_service.get_account_balance()
                 currencies = payment_service.get_supported_currencies()
                 service_available = True
-            except PaymentServiceError:
+            except Exception:
                 balance = None
                 currencies = None
                 service_available = False
