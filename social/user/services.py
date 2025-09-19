@@ -91,6 +91,8 @@ class CoinPaymentService:
             "POST", "/api/payment/create-invoice", invoice_data
         )
 
+        logger.info(f"Response data for create invoice: {response_data}")
+
         if not response_data.get("success"):
             raise Exception(
                 f"Failed to create invoice: {response_data.get('message', 'Unknown error')}"
@@ -138,7 +140,7 @@ class CoinPaymentService:
             response_data = self._make_request(
                 "GET", "/api/payment/invoices", {"orderId": order_id}
             )
-            print(response_data)
+            logger.info(f"Response data for get invoice status: {response_data}")
 
             return response_data
 

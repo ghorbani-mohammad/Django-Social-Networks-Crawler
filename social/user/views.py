@@ -566,12 +566,8 @@ class PaymentStatusView(APIView):
 
             # Get service status
             try:
-                balance = payment_service.get_account_balance()
-                currencies = payment_service.get_supported_currencies()
                 service_available = True
             except Exception:
-                balance = None
-                currencies = None
                 service_available = False
 
             return Response(
@@ -580,8 +576,6 @@ class PaymentStatusView(APIView):
                     "pending_payments": PaymentInvoiceSerializer(
                         pending_invoices, many=True
                     ).data,
-                    "supported_currencies": currencies,
-                    "service_balance": balance,
                 },
                 status=status.HTTP_200_OK,
             )
