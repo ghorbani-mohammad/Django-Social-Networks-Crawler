@@ -10,11 +10,6 @@ from django.utils import timezone as django_timezone
 from .models import PaymentInvoice, Profile, Subscription
 
 
-class PaymentServiceError(Exception):
-    """Custom exception for payment service errors."""
-
-    pass
-
 
 class CoinPaymentService:
     """Service class for interacting with NodeJS Coin Payment API."""
@@ -46,15 +41,15 @@ class CoinPaymentService:
                     url, headers=headers, json=data, timeout=self.timeout
                 )
             else:
-                raise PaymentServiceError(f"Unsupported HTTP method: {method}")
+                raise Exception(f"Unsupported HTTP method: {method}")
 
             response.raise_for_status()
             return response.json()
 
         except requests.exceptions.RequestException as e:
-            raise PaymentServiceError(f"Payment service request failed: {str(e)}")
+            raise Exception(f"Payment service request failed: {str(e)}")
         except ValueError as e:
-            raise PaymentServiceError(f"Invalid JSON response: {str(e)}")
+            raise Exception(f"Invalid JSON response: {str(e)}")
 
     def create_invoice(
         self,
@@ -94,7 +89,7 @@ class CoinPaymentService:
         )
 
         if not response_data.get("success"):
-            raise PaymentServiceError(
+            raise Exception(
                 f"Failed to create invoice: {response_data.get('message', 'Unknown error')}"
             )
 
@@ -144,7 +139,7 @@ class CoinPaymentService:
 
             return response_data
 
-        except PaymentServiceError:
+        except Exception:
             pass
 
         return None
@@ -157,7 +152,7 @@ class CoinPaymentService:
             if response_data.get("success"):
                 return response_data.get("data")
 
-        except PaymentServiceError:
+        except Exception:
             pass
 
         return None
@@ -170,7 +165,7 @@ class CoinPaymentService:
             if response_data.get("success"):
                 return response_data.get("data")
 
-        except PaymentServiceError:
+        except Exception:
             pass
 
         return None
@@ -185,7 +180,7 @@ class CoinPaymentService:
             # Find the corresponding payment invoice
             try:
                 payment_invoice = PaymentInvoice.objects.get(order_id=order_id)
-            except PaymentInvoice.DoesNotExist:
+            except Exception:
                 return False
 
             # Update payment invoice with webhook data
@@ -254,7 +249,7 @@ class CoinPaymentService:
                 )
                 return False
 
-        except PaymentServiceError as e:
+        except Exception as e:
             print(f"Error cancelling invoice {order_id}: {str(e)}")
             return False
 
