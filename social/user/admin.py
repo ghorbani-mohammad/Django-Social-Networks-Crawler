@@ -274,8 +274,10 @@ class PaymentInvoiceAdmin(ReadOnlyAdminDateFieldsMIXIN):
     def check_payment_status(self, request, queryset):
         """
         Admin action to check payment status from third-party service and update local records.
+        Also activates associated subscriptions when payments are completed.
         """
         updated_count = 0
+        subscriptions_activated = 0
         error_count = 0
 
         for invoice in queryset:
@@ -287,7 +289,9 @@ class PaymentInvoiceAdmin(ReadOnlyAdminDateFieldsMIXIN):
                 if status_data:
                     # Update invoice with fresh data from payment service
                     old_status = invoice.status
-                    invoice.status = status_data.get("status", invoice.status)
+                    new_status = status_data.get("status", invoice.status)
+                    invoice.status = new_status
+                    
                     # Update metadata with sync information
                     invoice.metadata.update(
                         {
@@ -297,16 +301,20 @@ class PaymentInvoiceAdmin(ReadOnlyAdminDateFieldsMIXIN):
                         }
                     )
 
-                    # If payment is finished, mark as paid and activate subscription
-                    if status_data.get("status") == "finished" and not invoice.paid_at:
-                        invoice.paid_at = timezone.now()
+                    # If payment is finished, ensure invoice is marked as paid and subscription is activated
+                    if new_status == "finished":
+                        # Mark as paid if not already marked
+                        if not invoice.paid_at:
+                            invoice.paid_at = timezone.now()
 
-                        # Activate the subscription if it exists
+                        # Always check and activate subscription if it's still pending
+                        # (This handles cases where payment was completed but subscription activation failed)
                         if (
                             invoice.subscription
                             and invoice.subscription.status == "pending"
                         ):
                             invoice.subscription.activate()
+                            subscriptions_activated += 1
 
                             # Update subscription payment reference
                             invoice.subscription.payment_reference = (
@@ -325,10 +333,18 @@ class PaymentInvoiceAdmin(ReadOnlyAdminDateFieldsMIXIN):
                 print(f"Error checking status for invoice {invoice.order_id}: {str(e)}")
 
         # Show results to admin
+        message_parts = []
+        
         if updated_count > 0:
+            message_parts.append(f"Updated {updated_count} payment invoice(s)")
+            
+        if subscriptions_activated > 0:
+            message_parts.append(f"Activated {subscriptions_activated} subscription(s)")
+
+        if message_parts:
             self.message_user(
                 request,
-                f"Successfully updated {updated_count} payment invoice(s).",
+                ". ".join(message_parts) + ".",
                 messages.SUCCESS,
             )
 
@@ -340,7 +356,7 @@ class PaymentInvoiceAdmin(ReadOnlyAdminDateFieldsMIXIN):
             )
 
     check_payment_status.short_description = (
-        "Check payment status from third-party service"
+        "Check payment status and activate subscriptions"
     )
 
 
