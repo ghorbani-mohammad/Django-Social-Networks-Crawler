@@ -10,6 +10,8 @@ from django.utils import timezone as django_timezone
 from .models import PaymentInvoice, Profile, Subscription
 
 
+logger = logging.getLogger(__name__)
+
 
 class CoinPaymentService:
     """Service class for interacting with NodeJS Coin Payment API."""
@@ -172,6 +174,7 @@ class CoinPaymentService:
 
     def process_webhook_data(self, webhook_data: Dict) -> bool:
         """Process webhook data from payment service."""
+        logger.info(f"Processing webhook data: {webhook_data}")
         try:
             order_id = webhook_data.get("order_id")
             if not order_id:
@@ -240,6 +243,7 @@ class CoinPaymentService:
             response_data = self._make_request(
                 "POST", "/api/payment/cancel-invoice", {"orderId": order_id}
             )
+            logger.info(f"Response data for cancel invoice: {response_data}")
 
             if response_data.get("success"):
                 return True
