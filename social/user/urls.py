@@ -62,5 +62,4 @@ urlpatterns = [
     path(
         "payments/webhook/", views.PaymentWebhookView.as_view(), name="payment_webhook"
     ),
-    path("payments/status/", views.PaymentStatusView.as_view(), name="payment_status"),
 ]
