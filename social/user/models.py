@@ -112,14 +112,14 @@ class Profile(BaseModel):
     def has_active_premium_subscription(self):
         """Check if user has an active premium subscription."""
         return Subscription.objects.filter(
-            profile=self, is_active=True, expires_at__gt=timezone.now()
+            profile=self, is_active=True, status="active", expires_at__gt=timezone.now()
         ).exists()
 
     def get_active_subscription(self):
         """Get the user's active subscription if any."""
         try:
             return Subscription.objects.get(
-                profile=self, is_active=True, expires_at__gt=timezone.now()
+                profile=self, is_active=True, status="active", expires_at__gt=timezone.now()
             )
         except Subscription.DoesNotExist:
             return None
