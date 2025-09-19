@@ -395,12 +395,12 @@ class PremiumStatusView(APIView):
     def get(self, request):
         profile = request.user.profile
         has_premium = profile.has_active_premium_subscription()
-        active_subscription = profile.get_active_subscription()
+        latest_subscription = profile.get_latest_subscription()
 
         data = {
             "has_premium": has_premium,
-            "subscription": SubscriptionSerializer(active_subscription).data
-            if active_subscription
+            "subscription": SubscriptionSerializer(latest_subscription).data
+            if latest_subscription
             else None,
         }
 
