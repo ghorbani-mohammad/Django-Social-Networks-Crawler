@@ -184,6 +184,13 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
 }
 
+# Coin Payment Service Configuration
+COIN_PAYMENT_BASE_URL = env.str(
+    "COIN_PAYMENT_BASE_URL", default="https://coin-payment.m-gh.com"
+)
+COIN_PAYMENT_API_SECRET = env.str("COIN_PAYMENT_API_SECRET", default="")
+
+
 django.setup()  # we need setup django to have access to apps
 # Logging (Just Email Handler)
 if EMAIL_HOST_USER and ADMIN_EMAIL_LOG:
@@ -267,9 +274,3 @@ REST_FRAMEWORK = {
 # Media files
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-
-# Coin Payment Service Configuration
-COIN_PAYMENT_BASE_URL = env.str(
-    "COIN_PAYMENT_BASE_URL", default="https://coin-payment.m-gh.com"
-)
-COIN_PAYMENT_API_SECRET = env.str("COIN_PAYMENT_API_SECRET", default="")
