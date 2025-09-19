@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
 from rest_framework import status
 from rest_framework.authentication import SessionAuthentication
+from rest_framework.generics import ListAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -20,6 +21,7 @@ from .serializers import (EmailVerificationConfirmSerializer,
                           SubscriptionSerializer, UserRegistrationSerializer,
                           UserSerializer)
 from .services import PaymentServiceError, payment_service
+from network.views import ListPagination
 
 User = get_user_model()
 
@@ -417,16 +419,16 @@ class PremiumStatusView(APIView):
         return Response(data, status=status.HTTP_200_OK)
 
 
-class PaymentInvoicesView(APIView):
+class PaymentInvoicesView(ListAPIView):
     """Get user's payment invoices."""
 
     authentication_classes = [JWTAuthentication, SessionAuthentication]
     permission_classes = [IsAuthenticated]
+    serializer_class = PaymentInvoiceSerializer
+    pagination_class = ListPagination
 
-    def get(self, request):
-        invoices = PaymentInvoice.objects.filter(profile=request.user.profile)
-        serializer = PaymentInvoiceSerializer(invoices, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    def get_queryset(self):
+        return PaymentInvoice.objects.filter(profile=self.request.user.profile).order_by("-created_at")
 
 
 class PaymentInvoiceDetailView(APIView):
