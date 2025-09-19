@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
+from django.utils import timezone
 from rest_framework import status
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.generics import ListAPIView
@@ -442,17 +443,6 @@ class PaymentInvoiceDetailView(APIView):
             invoice = PaymentInvoice.objects.get(
                 id=invoice_id, profile=request.user.profile
             )
-
-            # Try to get updated status from payment service
-            try:
-                payment_status = payment_service.get_invoice_status(invoice.order_id)
-                if payment_status and payment_status.get("status"):
-                    # Update local status if different
-                    if invoice.status != payment_status["status"]:
-                        invoice.status = payment_status["status"]
-                        invoice.save()
-            except Exception:
-                pass  # Continue with local data if service is unavailable
 
             serializer = PaymentInvoiceSerializer(invoice)
             return Response(serializer.data, status=status.HTTP_200_OK)
