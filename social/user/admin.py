@@ -287,14 +287,16 @@ class PaymentInvoiceAdmin(ReadOnlyAdminDateFieldsMIXIN):
             try:
                 # Get status from payment service
                 status_data = payment_service.get_invoice_status(invoice.order_id)
-                logger.info(f"Status data for invoice {invoice.order_id}: {status_data}")
+                logger.info(
+                    f"Status data for invoice {invoice.order_id}: {status_data}"
+                )
 
                 if status_data:
                     # Update invoice with fresh data from payment service
                     old_status = invoice.status
                     new_status = status_data.get("status", invoice.status)
                     invoice.status = new_status
-                    
+
                     # Update metadata with sync information
                     invoice.metadata.update(
                         {
@@ -337,10 +339,10 @@ class PaymentInvoiceAdmin(ReadOnlyAdminDateFieldsMIXIN):
 
         # Show results to admin
         message_parts = []
-        
+
         if updated_count > 0:
             message_parts.append(f"Updated {updated_count} payment invoice(s)")
-            
+
         if subscriptions_activated > 0:
             message_parts.append(f"Activated {subscriptions_activated} subscription(s)")
 

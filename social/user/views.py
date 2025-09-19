@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
 from django.utils import timezone
+from network.views import ListPagination
 from rest_framework import status
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.generics import ListAPIView
@@ -22,7 +23,6 @@ from .serializers import (EmailVerificationConfirmSerializer,
                           SubscriptionSerializer, UserRegistrationSerializer,
                           UserSerializer)
 from .services import payment_service
-from network.views import ListPagination
 
 User = get_user_model()
 
@@ -398,7 +398,7 @@ class PremiumStatusView(APIView):
     def get(self, request):
         profile = request.user.profile
         latest_subscription = profile.get_latest_subscription()
-        
+
         # Determine has_premium value: "active", "pending", or False
         if not latest_subscription:
             has_premium = False
@@ -429,7 +429,9 @@ class PaymentInvoicesView(ListAPIView):
     pagination_class = ListPagination
 
     def get_queryset(self):
-        return PaymentInvoice.objects.filter(profile=self.request.user.profile).order_by("-created_at")
+        return PaymentInvoice.objects.filter(
+            profile=self.request.user.profile
+        ).order_by("-created_at")
 
 
 class PaymentInvoiceDetailView(APIView):

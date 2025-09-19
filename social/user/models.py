@@ -119,7 +119,10 @@ class Profile(BaseModel):
         """Get the user's active subscription if any."""
         try:
             return Subscription.objects.get(
-                profile=self, is_active=True, status="active", expires_at__gt=timezone.now()
+                profile=self,
+                is_active=True,
+                status="active",
+                expires_at__gt=timezone.now(),
             )
         except Subscription.DoesNotExist:
             return None
