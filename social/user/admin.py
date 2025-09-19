@@ -1,4 +1,5 @@
 import json
+import logging
 
 from django import forms
 from django.contrib import admin, messages
@@ -8,6 +9,8 @@ from django.utils.html import format_html
 from reusable.admins import ReadOnlyAdminDateFieldsMIXIN
 from . import models
 from .services import payment_service
+
+logger = logging.getLogger(__name__)
 
 
 class SubscriptionPlanForm(forms.ModelForm):
@@ -284,7 +287,7 @@ class PaymentInvoiceAdmin(ReadOnlyAdminDateFieldsMIXIN):
             try:
                 # Get status from payment service
                 status_data = payment_service.get_invoice_status(invoice.order_id)
-                print(status_data)
+                logger.info(f"Status data for invoice {invoice.order_id}: {status_data}")
 
                 if status_data:
                     # Update invoice with fresh data from payment service
