@@ -124,6 +124,15 @@ class Profile(BaseModel):
         except Subscription.DoesNotExist:
             return None
 
+    def get_latest_subscription(self):
+        """Get the user's latest subscription regardless of status."""
+        try:
+            return Subscription.objects.filter(
+                profile=self, is_active=True, expires_at__gt=timezone.now()
+            ).first()
+        except Subscription.DoesNotExist:
+            return None
+
 
 class SubscriptionPlan(BaseModel):
     """Subscription plan model for different pricing tiers."""
