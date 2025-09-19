@@ -394,8 +394,18 @@ class PremiumStatusView(APIView):
 
     def get(self, request):
         profile = request.user.profile
-        has_premium = profile.has_active_premium_subscription()
         latest_subscription = profile.get_latest_subscription()
+        
+        # Determine has_premium value: "active", "pending", or False
+        if not latest_subscription:
+            has_premium = False
+        elif latest_subscription.status == "active":
+            has_premium = "active"
+        elif latest_subscription.status == "pending":
+            has_premium = "pending"
+        else:
+            # For expired, cancelled, or any other status
+            has_premium = False
 
         data = {
             "has_premium": has_premium,
