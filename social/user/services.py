@@ -1,8 +1,8 @@
 import logging
 import uuid
-from datetime import datetime, timezone
+from datetime import datetime
 from decimal import Decimal
-from typing import Any, Dict, Optional
+from typing import Dict, Optional
 
 import requests
 from django.conf import settings
@@ -25,13 +25,13 @@ class CoinPaymentService:
         self, method: str, endpoint: str, data: Optional[Dict] = None
     ) -> Dict:
         """Make HTTP request to payment service."""
-        url = f"{self.base_url}{endpoint}"
+        url = f"{self._base_url}{endpoint}"
         headers = {
             "Content-Type": "application/json",
         }
 
-        if self.api_secret:
-            headers["Authorization"] = f"Bearer {self.api_secret}"
+        if self._api_secret:
+            headers["Authorization"] = f"Bearer {self._api_secret}"
 
         try:
             if method.upper() == "GET":
