@@ -314,15 +314,6 @@ class PaymentInvoice(BaseModel):
     def cancel(self):
         """Cancel the payment invoice and associated subscription if applicable."""
         if self.can_be_cancelled():
-            # Try to cancel via payment service first
-            from .services import payment_service
-
-            try:
-                payment_service.cancel_invoice(self.order_id)
-            except Exception:
-                # Continue with local cancellation even if service call fails
-                pass
-
             self.status = "cancelled"
             self.save()
 

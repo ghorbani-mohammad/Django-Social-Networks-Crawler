@@ -317,7 +317,6 @@ class UserSubscriptionsView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
 class CancelSubscriptionView(APIView):
     """Cancel a user's subscription."""
 
