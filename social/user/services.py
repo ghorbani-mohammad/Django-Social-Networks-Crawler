@@ -154,26 +154,9 @@ class CoinPaymentService:
             except Exception:
                 return False
 
-            # Update payment invoice with webhook data
-            payment_invoice.invoice_id = webhook_data.get(
-                "invoice_id", payment_invoice.invoice_id
-            )
-            payment_invoice.status = webhook_data.get("status", payment_invoice.status)
-            payment_invoice.pay_amount = webhook_data.get(
-                "pay_amount", payment_invoice.pay_amount
-            )
-            payment_invoice.pay_currency = webhook_data.get(
-                "pay_currency", payment_invoice.pay_currency
-            )
-            payment_invoice.actually_paid = webhook_data.get(
-                "actually_paid", payment_invoice.actually_paid
-            )
-            payment_invoice.actually_paid_at_fiat = webhook_data.get(
-                "actually_paid_at_fiat", payment_invoice.actually_paid_at_fiat
-            )
-            payment_invoice.purchase_id = webhook_data.get(
-                "purchase_id", payment_invoice.purchase_id
-            )
+            if payment_invoice.status in ["finished", "cancelled", "failed", "expired"]:
+                logger.info(f"Payment invoice {order_id} is already processed")
+                return False
 
             # Update metadata
             payment_invoice.metadata.update(
@@ -183,19 +166,15 @@ class CoinPaymentService:
                 }
             )
 
-            # If payment is finished, mark as paid and activate subscription
-            if webhook_data.get("status") == "finished":
-                payment_invoice.paid_at = django_timezone.now()
+            # Activate the subscription
+            if payment_invoice.subscription:
+                payment_invoice.subscription.activate()
 
-                # Activate the subscription
-                if payment_invoice.subscription:
-                    payment_invoice.subscription.activate()
-
-                    # Update subscription payment reference
-                    payment_invoice.subscription.payment_reference = (
-                        payment_invoice.purchase_id or payment_invoice.invoice_id
-                    )
-                    payment_invoice.subscription.save()
+                # Update subscription payment reference
+                payment_invoice.subscription.payment_reference = (
+                    payment_invoice.purchase_id or payment_invoice.invoice_id
+                )
+                payment_invoice.subscription.save()
 
             payment_invoice.save()
             return True
