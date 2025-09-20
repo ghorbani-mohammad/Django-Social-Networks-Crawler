@@ -1,8 +1,8 @@
+import logging
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
-from django.utils.log import logger
-from django.utils import timezone
 from network.views import ListPagination
 from rest_framework import status
 from rest_framework.authentication import SessionAuthentication
@@ -25,7 +25,9 @@ from .serializers import (EmailVerificationConfirmSerializer,
                           UserSerializer)
 from .services import payment_service
 
+
 User = get_user_model()
+logger = logging.getLogger(__name__)
 
 
 def send_verification_email(email, code):
