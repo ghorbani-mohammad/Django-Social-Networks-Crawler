@@ -424,7 +424,7 @@ class PaymentInvoiceDetailView(APIView):
     def get(self, request, invoice_id):
         try:
             invoice = PaymentInvoice.objects.get(
-                id=invoice_id, profile=request.user.profile
+                order_id=invoice_id, profile=request.user.profile
             )
 
             serializer = PaymentInvoiceSerializer(invoice)
