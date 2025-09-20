@@ -317,24 +317,6 @@ class UserSubscriptionsView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class CurrentSubscriptionView(APIView):
-    """Get user's current active subscription."""
-
-    authentication_classes = [JWTAuthentication, SessionAuthentication]
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request):
-        subscription = request.user.profile.get_active_subscription()
-
-        if subscription:
-            serializer = SubscriptionSerializer(subscription)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response(
-                {"subscription": None, "message": "No active subscription found"},
-                status=status.HTTP_200_OK,
-            )
-
 
 class CancelSubscriptionView(APIView):
     """Cancel a user's subscription."""

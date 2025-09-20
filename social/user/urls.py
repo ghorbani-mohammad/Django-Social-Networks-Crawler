@@ -32,11 +32,6 @@ urlpatterns = [
         name="user_subscriptions",
     ),
     path(
-        "subscriptions/current/",
-        views.CurrentSubscriptionView.as_view(),
-        name="current_subscription",
-    ),
-    path(
         "subscriptions/<int:subscription_id>/cancel/",
         views.CancelSubscriptionView.as_view(),
         name="cancel_subscription",
