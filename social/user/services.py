@@ -135,44 +135,12 @@ class CoinPaymentService:
 
     def get_invoice_status(self, order_id: str) -> Dict:
         """Get invoice status by order ID."""
-        try:
-            response_data = self._make_request(
-                "GET", "/api/payment/invoices", {"orderId": order_id}
-            )
-            logger.info(f"Response data for get invoice status: {response_data}")
+        response_data = self._make_request(
+            "GET", "/api/payment/invoices", {"orderId": order_id}
+        )
+        logger.info(f"Response data for get invoice status: {response_data}")
 
-            return response_data
-
-        except Exception:
-            pass
-
-        return None
-
-    def get_account_balance(self) -> Optional[Dict]:
-        """Get account balance from payment service."""
-        try:
-            response_data = self._make_request("GET", "/api/payment/balance")
-
-            if response_data.get("success"):
-                return response_data.get("data")
-
-        except Exception:
-            pass
-
-        return None
-
-    def get_supported_currencies(self) -> Optional[Dict]:
-        """Get supported cryptocurrencies."""
-        try:
-            response_data = self._make_request("GET", "/api/payment/currencies")
-
-            if response_data.get("success"):
-                return response_data.get("data")
-
-        except Exception:
-            pass
-
-        return None
+        return response_data
 
     def process_webhook_data(self, webhook_data: Dict) -> bool:
         """Process webhook data from payment service."""
