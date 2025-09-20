@@ -424,13 +424,11 @@ class PaymentInvoiceDetailView(APIView):
     authentication_classes = [JWTAuthentication, SessionAuthentication]
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, invoice_id):
+    def get(self, request, order_id):
         try:
-            logger.info(f"Getting payment invoice {invoice_id} for user {request.user.profile.user.email}")
             invoice = PaymentInvoice.objects.get(
-                order_id=invoice_id, profile=request.user.profile
+                order_id=order_id, profile=request.user.profile
             )
-            logger.info(f"Payment invoice {invoice_id} found for user {request.user.profile.user.email}")
 
             serializer = PaymentInvoiceSerializer(invoice)
             return Response(serializer.data, status=status.HTTP_200_OK)
