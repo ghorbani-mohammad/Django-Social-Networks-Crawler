@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
+from django.utils.log import logger
 from django.utils import timezone
 from network.views import ListPagination
 from rest_framework import status
@@ -423,9 +424,11 @@ class PaymentInvoiceDetailView(APIView):
 
     def get(self, request, invoice_id):
         try:
+            logger.info(f"Getting payment invoice {invoice_id} for user {request.user.profile.user.email}")
             invoice = PaymentInvoice.objects.get(
                 order_id=invoice_id, profile=request.user.profile
             )
+            logger.info(f"Payment invoice {invoice_id} found for user {request.user.profile.user.email}")
 
             serializer = PaymentInvoiceSerializer(invoice)
             return Response(serializer.data, status=status.HTTP_200_OK)
