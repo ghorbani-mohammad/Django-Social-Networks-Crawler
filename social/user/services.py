@@ -176,6 +176,8 @@ class CoinPaymentService:
                 )
                 payment_invoice.subscription.save()
 
+            payment_invoice.status = "finished"
+            payment_invoice.paid_at = django_timezone.now()
             payment_invoice.save()
             return True
 
